@@ -2,7 +2,6 @@ package kr.co.nexsys.mcp.homemanager.test.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.co.nexsys.mcp.homemanager.test.controller.dto.TestRequestDto;
-
 import kr.co.nexsys.mcp.homemanager.test.service.TestService;
 import org.assertj.core.util.Lists;
 import org.junit.Test;
@@ -16,10 +15,9 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.BDDMockito.given;
-
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
@@ -53,7 +51,6 @@ public class TestControllerTest {
 
         mockMvc.perform(
                 post("/test/find")
-                        .accept(MediaType.APPLICATION_JSON_UTF8)
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
                         .content(objectMapper.writeValueAsString(requestDto))
                         .header("test-language", "ko"))
