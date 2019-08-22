@@ -47,6 +47,7 @@ public class TestControllerTest {
                         .name("tester")
                         .build();
 
+
         given(testService.findTestByDepartment(department)).willReturn(Lists.list(test));
 
         mockMvc.perform(

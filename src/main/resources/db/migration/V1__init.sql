@@ -11,7 +11,7 @@ CREATE TABLE T_TEST (
 CREATE TABLE MMS (
                    MRN VARCHAR(255) NOT NULL,
                    IP VARCHAR(39) NOT NULL,
-                   PORT SMALLINT UNSIGNED NOT NULL,
+                   PORT SMALLINT  NOT NULL,
                    CREATE_DATE DATETIME NOT NULL,
                    UPDATE_DATE DATETIME,
                    PRIMARY KEY(MRN)
