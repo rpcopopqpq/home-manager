@@ -1,12 +1,11 @@
 package kr.co.nexsys.mcp.homemanager.mms.dao.dvo;
 
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
+@Entity
 @Table(name = "MMS")
 @Builder
 @Setter
@@ -15,6 +14,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MMSDvo {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String mrn;
     private String ip;
     private Integer port;

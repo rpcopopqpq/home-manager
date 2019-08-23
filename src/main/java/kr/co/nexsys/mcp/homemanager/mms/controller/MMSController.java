@@ -35,11 +35,16 @@ public class MMSController {
     public MMSResponseDto createMMS(@RequestBody MMSRequestDto requestDto){
         log.debug("insert Data :"+requestDto.toString());
 
-        return MMSResponseDto.builder()
-                .MMSInfo(mmsService.createMMS(MMSController.valueOf(requestDto)).stream()
-                        .map(MMSController::valueOf)
-                        .collect(Collectors.toList())).build();
+        MMS mms = mmsService.createMMS(MMSController.valueOf(requestDto));
+        MMSDto mmsDto = MMSDto.builder()
+                            .mrn(mms.getMrn())
+                            .ip(mms.getIp())
+                            .port(mms.getPort())
+                            .createDate(mms.getCreateDate())
+                            .build();
 
+        return MMSResponseDto.builder()
+                .MMS(mmsDto).build();
     }
 
 

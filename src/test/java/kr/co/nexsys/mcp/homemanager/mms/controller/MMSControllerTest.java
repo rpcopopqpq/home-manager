@@ -69,7 +69,6 @@ public class MMSControllerTest {
 
     @Test
     public void createMMS() throws Exception{
-        //TODO : MMS 정보 생성
 
         MMS mms = MMS.builder()
                 .mrn("urn:home:mms:test:test-0.0.1v")
@@ -79,7 +78,7 @@ public class MMSControllerTest {
                 .build();
 
         //given
-        given(mmsService.createMMS(mms)).willReturn(Lists.list(mms));
+        given(mmsService.createMMS(mms)).willReturn(mms);
 
         mockMvc.perform(
                 post("/mms")
@@ -87,11 +86,11 @@ public class MMSControllerTest {
                         .content(objectMapper.writeValueAsString(mms)))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.mmsinfo.[0].mrn",equalTo(mms.getMrn())))
-                .andExpect(jsonPath("$.mmsinfo.[0].ip",equalTo(mms.getIp())))
-                .andExpect(jsonPath("$.mmsinfo.[0].port",equalTo(mms.getPort())))
+                .andExpect(jsonPath("$.mms.mrn",equalTo(mms.getMrn())))
+                .andExpect(jsonPath("$.mms.ip",equalTo(mms.getIp())))
+                .andExpect(jsonPath("$.mms.port",equalTo(mms.getPort())))
                 //.andExpect(jsonPath("$.mmsinfo.[0].createDate",equalTo(mms.getCreateDate().toString())))
-                .andExpect(jsonPath("$.mmsinfo.[0].updateDate",equalTo(null)));
+                .andExpect(jsonPath("$.mms.updateDate",equalTo(null)));
     }
 
     @Test
