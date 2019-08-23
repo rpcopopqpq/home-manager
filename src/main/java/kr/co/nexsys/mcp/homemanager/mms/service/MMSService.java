@@ -1,6 +1,7 @@
 package kr.co.nexsys.mcp.homemanager.mms.service;
 
 
+import kr.co.nexsys.mcp.homemanager.mms.controller.dto.MMSDto;
 import kr.co.nexsys.mcp.homemanager.mms.controller.dto.MMSRequestDto;
 import kr.co.nexsys.mcp.homemanager.mms.dao.MMSDao;
 import kr.co.nexsys.mcp.homemanager.mms.dao.dvo.MMSDvo;
@@ -26,8 +27,8 @@ public class MMSService {
 
     //MMS 조회
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public List<MMS> findMMSByMRN(String mrn){
-        return mmsDao.findOneByMrn(mrn).stream()
+    public List<MMS> findMMSByMrn(String mrn){
+        return mmsDao.findAllMMSByMrn(mrn).stream()
                 .map(MMSService::valueOf)
                 .collect(Collectors.toList());
     }
@@ -35,6 +36,51 @@ public class MMSService {
     //MMS 생성
     public MMS createMMS(MMS mms){
         return MMSService.valueOf(mmsDao.saveAndFlush(MMSService.valueOf(mms)));
+    }
+
+    //MMS 수정
+    public List<MMS> modifyMMS(String mrn, MMS mms){
+        //mrn에 해당하는 mms 조회
+        List<MMS> mmsList = mmsDao.findAllMMSByMrn(mrn).stream()
+                                .map(MMSService::valueOf)
+                                .collect(Collectors.toList());
+        // 수정
+        mmsList.stream()
+                .map(m->mms)
+                .collect(Collectors.toList())
+                .forEach(m->mmsDao.saveAndFlush(MMSService.valueOf(m)));
+
+        List<MMS> result = mmsDao.findAllMMSByMrn(mrn).stream()
+                .map(MMSService::valueOf)
+                .collect(Collectors.toList());
+
+        return result;
+    }
+
+    //MMS 삭제
+    public boolean removeMMS(String mrn){
+        boolean result = false;
+        //mrn에 해당하는 mms 조회
+        List<MMS> mmsList = mmsDao.findAllMMSByMrn(mrn).stream()
+                .map(MMSService::valueOf)
+                .collect(Collectors.toList());
+
+        //삭제
+        for (MMS mms : mmsList) {
+            mmsDao.delete(MMSService.valueOf(mms));
+        }
+
+        List<MMS> deleteResult = mmsDao.findAllMMSByMrn(mrn).stream()
+                                    .map(MMSService::valueOf)
+                                    .collect(Collectors.toList());
+
+        if(deleteResult.isEmpty()){
+         result = true;
+        }else{
+          result = false;
+        }
+
+        return result;
     }
 
 

@@ -26,14 +26,14 @@ public class MMSController {
         log.debug("mrn :" + mrn);
 
         return MMSResponseDto.builder()
-                .MMSInfo(mmsService.findMMSByMRN(mrn).stream()
+                .MMSInfo(mmsService.findMMSByMrn(mrn).stream()
                         .map(MMSController::valueOf)
                         .collect(Collectors.toList())).build();
     }
 
     @RequestMapping(method = RequestMethod.POST)
     public MMSResponseDto createMMS(@RequestBody MMSRequestDto requestDto){
-        log.debug("insert Data :"+requestDto.toString());
+        log.debug("insert Data :" + requestDto.toString());
 
         MMS mms = mmsService.createMMS(MMSController.valueOf(requestDto));
         MMSDto mmsDto = MMSDto.builder()
@@ -45,6 +45,32 @@ public class MMSController {
 
         return MMSResponseDto.builder()
                 .MMS(mmsDto).build();
+    }
+
+    @RequestMapping(value ="/{mrn}" ,method = RequestMethod.PATCH)
+    public MMSResponseDto modifyMMS(@PathVariable String mrn,
+                                    @RequestBody MMSRequestDto requestDto){
+        log.debug("update Data :" + requestDto +", mrn :" + mrn);
+
+        return MMSResponseDto.builder()
+                .MMSInfo(mmsService.modifyMMS(mrn,MMSController.valueOf(requestDto)).stream()
+                        .map(MMSController::valueOf)
+                        .collect(Collectors.toList())).build();
+    }
+
+    @RequestMapping(value = "/{mrn}", method = RequestMethod.DELETE)
+    public String removeMMS(@PathVariable String mrn){
+        log.debug("delete mrn :" + mrn);
+
+        String msg = "";
+       boolean result = mmsService.removeMMS(mrn);
+
+       if(result){
+           msg = "Delete Success!";
+       }else{
+           msg = "Delete Fail!";
+       }
+       return msg;
     }
 
 

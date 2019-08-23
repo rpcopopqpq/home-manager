@@ -18,8 +18,7 @@ import java.time.LocalDateTime;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -37,14 +36,8 @@ public class MMSControllerTest {
 
     //MRN으로부터 MMS 조회
     @Test
-    public void findMMSByMRN() throws Exception{
+    public void findMMS() throws Exception{
         String mrn = "urn:home:mms:test:test-0.0.1v";
-
-        MMSRequestDto mmsRequestDto =
-                MMSRequestDto.builder()
-                    .mrn(mrn)
-                    .build();
-
         MMS mms = MMS.builder()
                 .mrn(mrn)
                 .ip("127.0.0.1")
@@ -52,7 +45,7 @@ public class MMSControllerTest {
                 .build();
 
         //given
-        given(mmsService.findMMSByMRN(mrn)).willReturn(Lists.list(mms));
+        given(mmsService.findMMSByMrn(mrn)).willReturn(Lists.list(mms));
 
         mockMvc.perform(
                 get("/mms/"+mrn)
@@ -67,9 +60,9 @@ public class MMSControllerTest {
                 .andExpect(jsonPath("$.mmsinfo.[0].updateDate",equalTo(null)));
     }
 
+    //MMS 생성
     @Test
     public void createMMS() throws Exception{
-
         MMS mms = MMS.builder()
                 .mrn("urn:home:mms:test:test-0.0.1v")
                 .ip("127.0.0.1")
@@ -93,14 +86,56 @@ public class MMSControllerTest {
                 .andExpect(jsonPath("$.mms.updateDate",equalTo(null)));
     }
 
+    //MMS 수정
     @Test
-    public void modifyMMSByMRN(){
-        //TODO : MMS 정보 수정
+    public void modifyMMS() throws Exception{
+        String mrn = "urn:home:mms:test:test-0.0.2v";
+        MMS mms = MMS.builder()
+                .mrn(mrn)
+                .ip("127.0.0.1")
+                .port(1101)
+                .createDate(LocalDateTime.now())
+                .build();
+
+        //given
+        given(mmsService.modifyMMS(mrn,mms)).willReturn(Lists.list(mms));
+
+        mockMvc.perform(
+                patch("/mms/"+mrn)
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .content(objectMapper.writeValueAsString(mms)))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.mmsinfo.[0].mrn",equalTo(mrn)))
+                .andExpect(jsonPath("$.mmsinfo.[0].ip",equalTo(mms.getIp())))
+                .andExpect(jsonPath("$.mmsinfo.[0].port",equalTo(mms.getPort())))
+                //.andExpect(jsonPath("$.mmsinfo.[0].createDate",equalTo(mms.getCreateDate().toString())))
+                .andExpect(jsonPath("$.mmsinfo.[0].updateDate",equalTo(null)));
+
     }
 
     @Test
-    public void removeMMSByMRN(){
-        //TODO : MMS 정보 삭제
+    public void removeMMS() throws Exception{
+        boolean result = true;
+        String mrn = "urn:home:mms:test:test-0.0.2v";
+        MMS mms = MMS.builder()
+                .mrn("urn:home:mms:test:test-0.0.2v")
+                .ip("127.0.0.1")
+                .port(1101)
+                .createDate(LocalDateTime.now())
+                .build();
+
+        //given
+        given(mmsService.removeMMS(mrn)).willReturn(true);
+
+        mockMvc.perform(
+                delete("/mms/" + mrn)
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .content(objectMapper.writeValueAsString("{}")))
+                .andDo(print())
+                .andExpect(status().isOk());
+                //.andExpect(jsonPath("$msg",equalTo("Delete Success!")))
+
     }
 
 
