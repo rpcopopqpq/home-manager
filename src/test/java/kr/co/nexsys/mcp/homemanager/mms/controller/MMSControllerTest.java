@@ -68,8 +68,30 @@ public class MMSControllerTest {
     }
 
     @Test
-    public void createMMS(){
+    public void createMMS() throws Exception{
         //TODO : MMS 정보 생성
+
+        MMS mms = MMS.builder()
+                .mrn("urn:home:mms:test:test-0.0.1v")
+                .ip("127.0.0.1")
+                .port(1101)
+                .createDate(LocalDateTime.now())
+                .build();
+
+        //given
+        given(mmsService.createMMS(mms)).willReturn(Lists.list(mms));
+
+        mockMvc.perform(
+                post("/mms")
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .content(objectMapper.writeValueAsString(mms)))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.mmsinfo.[0].mrn",equalTo(mms.getMrn())))
+                .andExpect(jsonPath("$.mmsinfo.[0].ip",equalTo(mms.getIp())))
+                .andExpect(jsonPath("$.mmsinfo.[0].port",equalTo(mms.getPort())))
+                //.andExpect(jsonPath("$.mmsinfo.[0].createDate",equalTo(mms.getCreateDate().toString())))
+                .andExpect(jsonPath("$.mmsinfo.[0].updateDate",equalTo(null)));
     }
 
     @Test

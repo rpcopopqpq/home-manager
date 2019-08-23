@@ -33,6 +33,11 @@ public class MMSService {
     }
 
     //MMS 생성
+    public List<MMS> createMMS(MMS mms){
+        return mmsDao.saveMMS(MMSService.valueOf(mms)).stream()
+                .map(MMSService::valueOf)
+                .collect(Collectors.toList());
+    }
 
 
     private static MMS valueOf(MMSDvo mmsDvo){

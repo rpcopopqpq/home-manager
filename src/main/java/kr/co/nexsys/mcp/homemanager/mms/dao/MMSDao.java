@@ -9,4 +9,5 @@ import java.util.List;
 
 public interface MMSDao extends JpaRepository<MMSDvo,Integer> {
     List<MMSDvo> findOneByMrn(String mrn);
+    List<MMSDvo> saveMMS(MMSDvo mmsDvo);
 }

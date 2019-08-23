@@ -31,6 +31,27 @@ public class MMSController {
                         .collect(Collectors.toList())).build();
     }
 
+    @RequestMapping(method = RequestMethod.POST)
+    public MMSResponseDto createMMS(@RequestBody MMSRequestDto requestDto){
+        log.debug("insert Data :"+requestDto.toString());
+
+        return MMSResponseDto.builder()
+                .MMSInfo(mmsService.createMMS(MMSController.valueOf(requestDto)).stream()
+                        .map(MMSController::valueOf)
+                        .collect(Collectors.toList())).build();
+
+    }
+
+
+    private static MMS valueOf(MMSRequestDto requestDto){
+        return MMS.builder()
+                .mrn(requestDto.getMrn())
+                .ip(requestDto.getIp())
+                .port(requestDto.getPort())
+                .createDate(requestDto.getCreateDate())
+                .updateDate(requestDto.getUpdateDate())
+                .build();
+    }
 
     private static MMSDto valueOf(MMS mms){
         return MMSDto.builder()
