@@ -4,6 +4,29 @@ spring:
 
 server:
   port: 8081
+#  use-forward-headers: true
+
+keycloak:
+  #enabled: false
+  realm: demo
+  auth-server-url: http://localhost:8080/auth
+  ssl-required: external
+  resource: home-manager
+  #  verify-token-audience: true
+  credentials:
+    secret: 3347a9f6-c38b-4317-b8f2-813f8f248951
+  use-resource-role-mappings: true # jwt 안의 resource_access 에 role 을 본다, 기본은 realm_access의 role을 본다.
+  bearer-only: true
+  #  confidential-port: 443
+  securityConstraints[0]:
+    securityCollections[0]:
+      name: public endpoints
+      patterns[0]: /home
+  securityConstraints[1]:
+    authRoles[0]: user
+    securityCollections[0]:
+      name: protected endpoints
+      patterns[0]:  /test/*
 
 # local
 ---

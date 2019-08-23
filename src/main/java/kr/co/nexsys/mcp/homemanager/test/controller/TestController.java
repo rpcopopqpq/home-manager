@@ -5,7 +5,6 @@ import kr.co.nexsys.mcp.homemanager.test.controller.dto.TestRequestDto;
 import kr.co.nexsys.mcp.homemanager.test.controller.dto.TestResponseDto;
 import kr.co.nexsys.mcp.homemanager.test.service.TestService;
 import kr.co.nexsys.mcp.homemanager.test.service.vo.Test;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,7 +22,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/test")
 public class TestController {
 
-    private TestService testService;
+    private final TestService testService;
 
     @Autowired
     public TestController(TestService testService) {
@@ -36,6 +35,11 @@ public class TestController {
                 .name(test.getName())
                 .department(test.getDepartment())
                 .build();
+    }
+
+    @GetMapping
+    public static String test() {
+        return "This is test";
     }
 
     @PostMapping("/find")
