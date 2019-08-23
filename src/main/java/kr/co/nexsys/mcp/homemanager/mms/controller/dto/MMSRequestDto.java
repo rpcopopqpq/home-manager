@@ -5,10 +5,16 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 public class MMSRequestDto {
     private String mrn;
+    private String ip;
+    private Integer port;
+    private LocalDateTime createDate;
+    private LocalDateTime updateDate;
 }

@@ -1,6 +1,7 @@
 package kr.co.nexsys.mcp.homemanager.mms.service;
 
 
+import kr.co.nexsys.mcp.homemanager.mms.controller.dto.MMSRequestDto;
 import kr.co.nexsys.mcp.homemanager.mms.dao.MMSDao;
 import kr.co.nexsys.mcp.homemanager.mms.dao.dvo.MMSDvo;
 import kr.co.nexsys.mcp.homemanager.mms.service.vo.MMS;
@@ -23,6 +24,17 @@ public class MMSService {
     @Autowired
     public MMSService(MMSDao mmsDao) {this.mmsDao = mmsDao;}
 
+    //MMS 조회
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+    public List<MMS> findMMSByMRN(String mrn){
+        return mmsDao.findOneByMrn(mrn).stream()
+                .map(MMSService::valueOf)
+                .collect(Collectors.toList());
+    }
+
+    //MMS 생성
+
+
     private static MMS valueOf(MMSDvo mmsDvo){
         return MMS.builder()
                 .mrn(mmsDvo.getMrn())
@@ -41,14 +53,6 @@ public class MMSService {
                 .createDate(mms.getCreateDate())
                 .updateDate(mms.getUpdateDate())
                 .build();
-    }
-
-    //MMS 조회
-    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public List<MMS> findMMSByMRN(String mrn){
-        return mmsDao.findAllByMrn(mrn).stream()
-                .map(MMSService::valueOf)
-                .collect(Collectors.toList());
     }
 
 
