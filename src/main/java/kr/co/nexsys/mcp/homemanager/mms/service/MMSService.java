@@ -2,7 +2,6 @@ package kr.co.nexsys.mcp.homemanager.mms.service;
 
 
 
-import kr.co.nexsys.mcp.homemanager.mms.controller.dto.MMSCreateReqDto;
 import kr.co.nexsys.mcp.homemanager.mms.controller.dto.MMSDto;
 import kr.co.nexsys.mcp.homemanager.mms.dao.MMSDao;
 import kr.co.nexsys.mcp.homemanager.mms.dao.dvo.MMSDvo;
@@ -35,10 +34,19 @@ public class MMSService {
                 .collect(Collectors.toList());
     }
 
+    //MMS 전체 조회
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+    public List<MMS> findAllMMSs(){
+        return mmsDao.findAll().stream()
+                .map(MMSService::valueOf)
+                .collect(Collectors.toList());
+    }
+
+
     //MMS 생성
-    public List<MMS> createMMS(MMSCreateReqDto mmsDtoList){
+    public List<MMS> createMMS(List<MMSDto> mmsDtoList){
         List<MMS> resultList = new ArrayList<>();
-        for(MMSDto mmsDto : mmsDtoList.getMMSList()){
+        for(MMSDto mmsDto : mmsDtoList){
             resultList.add(MMSService.valueOf(mmsDao.saveAndFlush(MMSService.valueOf(mmsDto))));
         }
 
