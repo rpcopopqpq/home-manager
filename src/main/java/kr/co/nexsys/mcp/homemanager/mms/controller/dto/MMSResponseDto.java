@@ -9,5 +9,4 @@ import java.util.List;
 @Getter
 public class MMSResponseDto {
     private List<MMSDto> MMSInfo;
-    private MMSDto MMS;
 }

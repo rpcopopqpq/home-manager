@@ -1,7 +1,8 @@
 package kr.co.nexsys.mcp.homemanager.mms.controller;
 
+import kr.co.nexsys.mcp.homemanager.mms.controller.dto.MMSCreateReqDto;
 import kr.co.nexsys.mcp.homemanager.mms.controller.dto.MMSDto;
-import kr.co.nexsys.mcp.homemanager.mms.controller.dto.MMSRequestDto;
+import kr.co.nexsys.mcp.homemanager.mms.controller.dto.MMSModifyReqDto;
 import kr.co.nexsys.mcp.homemanager.mms.controller.dto.MMSResponseDto;
 import kr.co.nexsys.mcp.homemanager.mms.service.MMSService;
 import kr.co.nexsys.mcp.homemanager.mms.service.vo.MMS;
@@ -32,24 +33,19 @@ public class MMSController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public MMSResponseDto createMMS(@RequestBody MMSRequestDto requestDto){
+    public MMSResponseDto createMMS(@RequestBody MMSCreateReqDto requestDto){
         log.debug("insert Data :" + requestDto.toString());
 
-        MMS mms = mmsService.createMMS(MMSController.valueOf(requestDto));
-        MMSDto mmsDto = MMSDto.builder()
-                            .mrn(mms.getMrn())
-                            .ip(mms.getIp())
-                            .port(mms.getPort())
-                            .createDate(mms.getCreateDate())
-                            .build();
-
         return MMSResponseDto.builder()
-                .MMS(mmsDto).build();
+                .MMSInfo(mmsService.createMMS(requestDto).stream()
+                        .map(MMSController::valueOf)
+                        .collect(Collectors.toList())).build();
+
     }
 
     @RequestMapping(value ="/{mrn}" ,method = RequestMethod.PATCH)
     public MMSResponseDto modifyMMS(@PathVariable String mrn,
-                                    @RequestBody MMSRequestDto requestDto){
+                                    @RequestBody MMSModifyReqDto requestDto){
         log.debug("update Data :" + requestDto +", mrn :" + mrn);
 
         return MMSResponseDto.builder()
@@ -74,7 +70,7 @@ public class MMSController {
     }
 
 
-    private static MMS valueOf(MMSRequestDto requestDto){
+    private static MMS valueOf(MMSModifyReqDto requestDto){
         return MMS.builder()
                 .mrn(requestDto.getMrn())
                 .ip(requestDto.getIp())

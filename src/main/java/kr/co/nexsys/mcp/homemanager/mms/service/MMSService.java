@@ -1,8 +1,9 @@
 package kr.co.nexsys.mcp.homemanager.mms.service;
 
 
+
+import kr.co.nexsys.mcp.homemanager.mms.controller.dto.MMSCreateReqDto;
 import kr.co.nexsys.mcp.homemanager.mms.controller.dto.MMSDto;
-import kr.co.nexsys.mcp.homemanager.mms.controller.dto.MMSRequestDto;
 import kr.co.nexsys.mcp.homemanager.mms.dao.MMSDao;
 import kr.co.nexsys.mcp.homemanager.mms.dao.dvo.MMSDvo;
 import kr.co.nexsys.mcp.homemanager.mms.service.vo.MMS;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,8 +36,13 @@ public class MMSService {
     }
 
     //MMS 생성
-    public MMS createMMS(MMS mms){
-        return MMSService.valueOf(mmsDao.saveAndFlush(MMSService.valueOf(mms)));
+    public List<MMS> createMMS(MMSCreateReqDto mmsDtoList){
+        List<MMS> resultList = new ArrayList<>();
+        for(MMSDto mmsDto : mmsDtoList.getMMSList()){
+            resultList.add(MMSService.valueOf(mmsDao.saveAndFlush(MMSService.valueOf(mmsDto))));
+        }
+
+        return resultList;
     }
 
     //MMS 수정
@@ -75,9 +82,9 @@ public class MMSService {
                                     .collect(Collectors.toList());
 
         if(deleteResult.isEmpty()){
-         result = true;
+             result = true;
         }else{
-          result = false;
+             result = false;
         }
 
         return result;
@@ -104,7 +111,14 @@ public class MMSService {
                 .build();
     }
 
-
-
+    private static MMSDvo valueOf(MMSDto mmsDto){
+        return MMSDvo.builder()
+                .mrn(mmsDto.getMrn())
+                .ip(mmsDto.getIp())
+                .port(mmsDto.getPort())
+                .createDate(mmsDto.getCreateDate())
+                .updateDate(mmsDto.getUpdateDate())
+                .build();
+    }
 
 }
