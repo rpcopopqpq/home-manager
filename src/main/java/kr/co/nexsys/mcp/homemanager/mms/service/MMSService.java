@@ -2,16 +2,27 @@ package kr.co.nexsys.mcp.homemanager.mms.service;
 
 
 
+import kr.co.nexsys.mcp.homemanager.exception.DatabaseException;
+import kr.co.nexsys.mcp.homemanager.exception.NullResultException;
+import kr.co.nexsys.mcp.homemanager.exception.SystemException;
+import kr.co.nexsys.mcp.homemanager.mms.controller.MMSController;
 import kr.co.nexsys.mcp.homemanager.mms.controller.dto.MMSDto;
 import kr.co.nexsys.mcp.homemanager.mms.dao.MMSDao;
 import kr.co.nexsys.mcp.homemanager.mms.dao.dvo.MMSDvo;
 import kr.co.nexsys.mcp.homemanager.mms.service.vo.MMS;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.HibernateException;
+import org.hibernate.engine.jdbc.spi.SqlExceptionHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.validation.ConstraintViolationException;
+import java.sql.SQLClientInfoException;
+import java.sql.SQLDataException;
+import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,76 +37,98 @@ public class MMSService {
     @Autowired
     public MMSService(MMSDao mmsDao) {this.mmsDao = mmsDao;}
 
-    //MMS 조회
-    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public List<MMS> findMMSByMrn(String mrn){
-        return mmsDao.findAllMMSByMrn(mrn).stream()
-                .map(MMSService::valueOf)
-                .collect(Collectors.toList());
-    }
-
     //MMS 전체 조회
-    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public List<MMS> findAllMMSs(){
-        return mmsDao.findAll().stream()
-                .map(MMSService::valueOf)
-                .collect(Collectors.toList());
+    @Transactional(readOnly = true)
+    public List<MMS> findAllMMSs() {
+        try {
+            List<MMS> result = mmsDao.findAll().stream()
+                                               .map(MMSService::valueOf)
+                                               .collect(Collectors.toList());
+            if (result.isEmpty()) {
+                throw new NullResultException();
+            } else {
+                return result;
+            }
+        }catch(NullResultException n) {
+            throw new NullResultException();
+        }catch(Exception e){
+            throw new DatabaseException("find");
+        }
     }
 
+    //MMS 조회
+    @Transactional(readOnly = true)
+    public List<MMS> findMMSByMrn(String mrn) {
+        try {
+            List<MMS> result = mmsDao.findAllMMSByMrn(mrn).stream()
+                    .map(MMSService::valueOf)
+                    .collect(Collectors.toList());
+            if (result.isEmpty()) {
+                throw new NullResultException();
+            } else {
+                return result;
+            }
+        }catch(NullResultException n) {
+            throw new NullResultException();
+        }catch(Exception e){
+            throw new DatabaseException("find");
+        }
+    }
 
     //MMS 생성
-    public List<MMS> createMMS(List<MMSDto> mmsDtoList){
-        List<MMS> resultList = new ArrayList<>();
-        for(MMSDto mmsDto : mmsDtoList){
-            resultList.add(MMSService.valueOf(mmsDao.saveAndFlush(MMSService.valueOf(mmsDto))));
+    public void createMMS(MMS mms) {
+        try {
+            //생성
+            mmsDao.saveAndFlush(MMSService.valueOf(mms));
+        }catch(Exception e){
+            throw new DatabaseException("create");
         }
-
-        return resultList;
     }
 
     //MMS 수정
-    public List<MMS> modifyMMS(String mrn, MMS mms){
-        //mrn에 해당하는 mms 조회
-        List<MMS> mmsList = mmsDao.findAllMMSByMrn(mrn).stream()
-                                .map(MMSService::valueOf)
-                                .collect(Collectors.toList());
-        // 수정
-        mmsList.stream()
-                .map(m->mms)
-                .collect(Collectors.toList())
-                .forEach(m->mmsDao.saveAndFlush(MMSService.valueOf(m)));
+    public void modifyMMS(String mrn, MMS mms) throws SystemException{
+        try {
+            //mrn에 해당하는 mms 조회
+            List<MMS> mmsList = mmsDao.findAllMMSByMrn(mrn).stream()
+                                                           .map(MMSService::valueOf)
+                                                           .collect(Collectors.toList());
 
-        List<MMS> result = mmsDao.findAllMMSByMrn(mrn).stream()
-                .map(MMSService::valueOf)
-                .collect(Collectors.toList());
-
-        return result;
+            if(mmsList.isEmpty()){
+                throw new NullResultException();
+            }else {
+                // 수정
+                for(MMS m : mmsList){
+                    mmsDao.saveAndFlush(MMSService.valueOf(mms));
+                }
+            }
+        }catch(NullResultException n) {
+            throw new NullResultException();
+        }catch(Exception e){
+            throw new DatabaseException("modify");
+        }
     }
 
     //MMS 삭제
-    public boolean removeMMS(String mrn){
+    public void removeMMS(String mrn) throws SystemException{
         boolean result = false;
-        //mrn에 해당하는 mms 조회
-        List<MMS> mmsList = mmsDao.findAllMMSByMrn(mrn).stream()
-                .map(MMSService::valueOf)
-                .collect(Collectors.toList());
-
-        //삭제
-        for (MMS mms : mmsList) {
-            mmsDao.delete(MMSService.valueOf(mms));
+        try {
+            //mrn에 해당하는 mms 조회
+            List<MMS> mmsList = mmsDao.findAllMMSByMrn(mrn).stream()
+                    .map(MMSService::valueOf)
+                    .collect(Collectors.toList());
+            if(mmsList.isEmpty()){
+                throw new NullResultException();
+            }else {
+                //삭제
+                for (MMS mms : mmsList) {
+                    mmsDao.delete(MMSService.valueOf(mms));
+                }
+            }
+        }catch(NullResultException n) {
+            throw new NullResultException();
+        }catch(Exception e){
+            throw new DatabaseException("delete");
         }
-
-        List<MMS> deleteResult = mmsDao.findAllMMSByMrn(mrn).stream()
-                                    .map(MMSService::valueOf)
-                                    .collect(Collectors.toList());
-
-        if(deleteResult.isEmpty()){
-             result = true;
-        }else{
-             result = false;
-        }
-
-        return result;
     }
 
 

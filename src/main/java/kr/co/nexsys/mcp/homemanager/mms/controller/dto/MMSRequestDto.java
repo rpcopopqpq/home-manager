@@ -1,10 +1,10 @@
 package kr.co.nexsys.mcp.homemanager.mms.controller.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Builder
@@ -12,8 +12,11 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Getter
 public class MMSRequestDto {
+    @NotNull
     private String mrn;
+    @NotNull
     private String ip;
+    @NotNull
     private Integer port;
     private LocalDateTime createDate;
     private LocalDateTime updateDate;

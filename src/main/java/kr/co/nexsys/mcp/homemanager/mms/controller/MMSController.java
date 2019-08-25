@@ -1,6 +1,8 @@
 package kr.co.nexsys.mcp.homemanager.mms.controller;
 
+import kr.co.nexsys.mcp.homemanager.exception.DatabaseException;
 import kr.co.nexsys.mcp.homemanager.exception.NullResultException;
+import kr.co.nexsys.mcp.homemanager.exception.SystemException;
 import kr.co.nexsys.mcp.homemanager.mms.controller.dto.MMSDto;
 import kr.co.nexsys.mcp.homemanager.mms.controller.dto.MMSRequestDto;
 import kr.co.nexsys.mcp.homemanager.mms.controller.dto.MMSResponseDto;
@@ -9,8 +11,10 @@ import kr.co.nexsys.mcp.homemanager.mms.service.vo.MMS;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,43 +30,49 @@ public class MMSController {
     @Autowired
     private MMSController(MMSService mmsService ) {this.mmsService = mmsService;}
 
+    @GetMapping()
+    public MMSResponseDto findAllMMSs(){
+        log.debug("mmsList all find");
+
+        List<MMS> result = new ArrayList<>();
+        try {
+             result = mmsService.findAllMMSs();
+        }catch(SystemException e){
+            throw new SystemException();
+        }
+        return MMSResponseDto.builder()
+                    .MMSInfo(result.stream()
+                            .map(MMSController::valueOf)
+                            .collect(Collectors.toList())).build();
+    }
+
     @GetMapping(value = "/{mrn}")
     public MMSResponseDto findMMS(@PathVariable String mrn){
         log.debug("mrn :" + mrn);
 
-        List<MMS> test= new ArrayList<>();
-        test= mmsService.findMMSByMrn(mrn);
-
-        if(test.isEmpty()){
-            throw new NullResultException();
-        }else{
-            return MMSResponseDto.builder()
-                    .MMSInfo(mmsService.findMMSByMrn(mrn).stream()
-                            .map(MMSController::valueOf)
-                            .collect(Collectors.toList())).build();
+        List<MMS> result = new ArrayList<>();
+        try {
+            result = mmsService.findMMSByMrn(mrn);
+        }catch(SystemException e){
+            throw new SystemException();
         }
-    }
-
-    @GetMapping
-    public MMSResponseDto findAllMMSs(){
-        log.debug("mmsList all find");
-
         return MMSResponseDto.builder()
-                .MMSInfo(mmsService.findAllMMSs().stream()
+                .MMSInfo(result.stream()
                         .map(MMSController::valueOf)
                         .collect(Collectors.toList())).build();
     }
 
-
-    @PostMapping
-    public MMSResponseDto createMMS(@RequestBody List<MMSDto> requestDto){
+    @PostMapping()
+    public MMSResponseDto createMMS(@RequestBody @Valid MMSRequestDto requestDto){
         log.debug("insert Data :" + requestDto.toString());
 
+        try {
+            mmsService.createMMS(MMSController.valueOf(requestDto));
+        }catch(SystemException e){
+            throw new SystemException();
+        }
         return MMSResponseDto.builder()
-                .MMSInfo(mmsService.createMMS(requestDto).stream()
-                        .map(MMSController::valueOf)
-                        .collect(Collectors.toList())).build();
-
+                .message("Create Sucess").build();
     }
 
     @PatchMapping(value = "/{mrn}")
@@ -70,25 +80,26 @@ public class MMSController {
                                     @RequestBody MMSRequestDto requestDto){
         log.debug("update Data :" + requestDto +", mrn :" + mrn);
 
+        try {
+            mmsService.modifyMMS(mrn,MMSController.valueOf(requestDto));
+        }catch(SystemException e){
+            throw new SystemException();
+        }
         return MMSResponseDto.builder()
-                .MMSInfo(mmsService.modifyMMS(mrn,MMSController.valueOf(requestDto)).stream()
-                        .map(MMSController::valueOf)
-                        .collect(Collectors.toList())).build();
+                .message("Modify Success").build();
     }
 
     @DeleteMapping(value = "/{mrn}")
-    public ResponseEntity removeMMS(@PathVariable String mrn){
+    public MMSResponseDto removeMMS(@PathVariable String mrn){
         log.debug("delete mrn :" + mrn);
 
-        String msg = "";
-       boolean result = mmsService.removeMMS(mrn);
-
-       if(result){
-           msg ="Delete Success!";
-       }else{
-           msg ="{\"msg\":\"Delete Fail!\"}";
-       }
-       return ResponseEntity.ok(msg);
+        try {
+            mmsService.removeMMS(mrn);
+        }catch(SystemException e){
+            throw new SystemException();
+        }
+       return MMSResponseDto.builder()
+                            .message("Delete Success").build();
     }
 
 
