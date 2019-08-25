@@ -37,7 +37,7 @@ public class MMSController {
         List<MMS> result = new ArrayList<>();
         try {
              result = mmsService.findAllMMSs();
-        }catch(SystemException e){
+        }catch(Exception e){
             throw new SystemException();
         }
         return MMSResponseDto.builder()
@@ -50,12 +50,8 @@ public class MMSController {
     public MMSResponseDto findMMS(@PathVariable String mrn){
         log.debug("mrn :" + mrn);
 
-        List<MMS> result = new ArrayList<>();
-        try {
-            result = mmsService.findMMSByMrn(mrn);
-        }catch(SystemException e){
-            throw new SystemException();
-        }
+        List<MMS> result = mmsService.findMMSByMrn(mrn);
+
         return MMSResponseDto.builder()
                 .MMSInfo(result.stream()
                         .map(MMSController::valueOf)
@@ -66,25 +62,19 @@ public class MMSController {
     public MMSResponseDto createMMS(@RequestBody @Valid MMSRequestDto requestDto){
         log.debug("insert Data :" + requestDto.toString());
 
-        try {
-            mmsService.createMMS(MMSController.valueOf(requestDto));
-        }catch(SystemException e){
-            throw new SystemException();
-        }
+        mmsService.createMMS(MMSController.valueOf(requestDto));
+
         return MMSResponseDto.builder()
                 .message("Create Sucess").build();
     }
 
     @PatchMapping(value = "/{mrn}")
     public MMSResponseDto modifyMMS(@PathVariable String mrn,
-                                    @RequestBody MMSRequestDto requestDto){
+                                    @RequestBody @Valid MMSRequestDto requestDto){
         log.debug("update Data :" + requestDto +", mrn :" + mrn);
 
-        try {
-            mmsService.modifyMMS(mrn,MMSController.valueOf(requestDto));
-        }catch(SystemException e){
-            throw new SystemException();
-        }
+        mmsService.modifyMMS(mrn,MMSController.valueOf(requestDto));
+
         return MMSResponseDto.builder()
                 .message("Modify Success").build();
     }
@@ -93,11 +83,8 @@ public class MMSController {
     public MMSResponseDto removeMMS(@PathVariable String mrn){
         log.debug("delete mrn :" + mrn);
 
-        try {
-            mmsService.removeMMS(mrn);
-        }catch(SystemException e){
-            throw new SystemException();
-        }
+        mmsService.removeMMS(mrn);
+
        return MMSResponseDto.builder()
                             .message("Delete Success").build();
     }

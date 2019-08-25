@@ -60,7 +60,7 @@ public class MMSService {
     @Transactional(readOnly = true)
     public List<MMS> findMMSByMrn(String mrn) {
         try {
-            List<MMS> result = mmsDao.findAllMMSByMrn(mrn).stream()
+            List<MMS> result = mmsDao.findOneMMSByMrn(mrn).stream()
                     .map(MMSService::valueOf)
                     .collect(Collectors.toList());
             if (result.isEmpty()) {
@@ -86,13 +86,12 @@ public class MMSService {
     }
 
     //MMS 수정
-    public void modifyMMS(String mrn, MMS mms) throws SystemException{
+    public void modifyMMS(String mrn, MMS mms) {
         try {
             //mrn에 해당하는 mms 조회
-            List<MMS> mmsList = mmsDao.findAllMMSByMrn(mrn).stream()
+            List<MMS> mmsList = mmsDao.findOneMMSByMrn(mrn).stream()
                                                            .map(MMSService::valueOf)
                                                            .collect(Collectors.toList());
-
             if(mmsList.isEmpty()){
                 throw new NullResultException();
             }else {
@@ -109,11 +108,11 @@ public class MMSService {
     }
 
     //MMS 삭제
-    public void removeMMS(String mrn) throws SystemException{
+    public void removeMMS(String mrn) {
         boolean result = false;
         try {
             //mrn에 해당하는 mms 조회
-            List<MMS> mmsList = mmsDao.findAllMMSByMrn(mrn).stream()
+            List<MMS> mmsList = mmsDao.findOneMMSByMrn(mrn).stream()
                     .map(MMSService::valueOf)
                     .collect(Collectors.toList());
             if(mmsList.isEmpty()){

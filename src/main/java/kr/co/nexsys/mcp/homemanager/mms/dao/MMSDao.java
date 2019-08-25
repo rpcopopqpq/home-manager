@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface MMSDao extends JpaRepository<MMSDvo,Long> {
-    List<MMSDvo> findAllMMSByMrn(String mrn);
+    List<MMSDvo> findOneMMSByMrn(String mrn);
 }
