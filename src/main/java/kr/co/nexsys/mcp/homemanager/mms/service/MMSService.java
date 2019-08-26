@@ -2,28 +2,17 @@ package kr.co.nexsys.mcp.homemanager.mms.service;
 
 
 
-import kr.co.nexsys.mcp.homemanager.exception.DatabaseException;
 import kr.co.nexsys.mcp.homemanager.exception.NullResultException;
 import kr.co.nexsys.mcp.homemanager.exception.SystemException;
-import kr.co.nexsys.mcp.homemanager.mms.controller.MMSController;
-import kr.co.nexsys.mcp.homemanager.mms.controller.dto.MMSDto;
 import kr.co.nexsys.mcp.homemanager.mms.dao.MMSDao;
 import kr.co.nexsys.mcp.homemanager.mms.dao.dvo.MMSDvo;
 import kr.co.nexsys.mcp.homemanager.mms.service.vo.MMS;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.HibernateException;
-import org.hibernate.engine.jdbc.spi.SqlExceptionHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.validation.ConstraintViolationException;
-import java.sql.SQLClientInfoException;
-import java.sql.SQLDataException;
-import java.sql.SQLException;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -45,13 +34,14 @@ public class MMSService {
                                                .map(MMSService::valueOf)
                                                .collect(Collectors.toList());
             if (result.isEmpty()) {
-                throw new NullResultException();
+                throw new NullResultException("HM03001N");
             } else {
                 return result;
             }
         }catch(NullResultException n){
-            throw new NullResultException();
+            throw new NullResultException("HM03001N");
         }catch(Exception e){
+            e.printStackTrace();
             throw new SystemException();
         }
     }
@@ -60,14 +50,9 @@ public class MMSService {
     @Transactional(readOnly = true)
     public MMS findMMSByMrn(String mrn) {
         try {
-            MMS result = MMSService.valueOf(mmsDao.findOneMMSByMrn(mrn));
-            if (result ==null) {
-                throw new NullResultException();
-            } else {
-                return result;
-            }
-        }catch(NullResultException n) {
-            throw new NullResultException();
+            return MMSService.valueOf(mmsDao.findOneMMSByMrn(mrn));
+        }catch(NullPointerException n) {
+            throw new NullResultException("HM03001N");
         }catch(Exception e){
             throw new SystemException();
         }
@@ -90,15 +75,12 @@ public class MMSService {
         try {
             //mrn에 해당하는 mms 조회
             MMS result = MMSService.valueOf(mmsDao.findOneMMSByMrn(mrn));
-            if(result ==null){
-                throw new NullResultException();
-            }else {
-                result.setIp(mms.getIp());
-                result.setPort(mms.getPort());
-                mmsDao.saveAndFlush(MMSService.valueOf(result));
-            }
-        }catch(NullResultException n) {
-            throw new NullResultException();
+
+            result.setIp(mms.getIp());
+            result.setPort(mms.getPort());
+            mmsDao.saveAndFlush(MMSService.valueOf(result));
+        }catch(NullPointerException n) {
+            throw new NullResultException("HM03001N");
         }catch(Exception e){
             throw new SystemException();
         }
@@ -109,13 +91,10 @@ public class MMSService {
         try {
             //mrn에 해당하는 mms 조회
             MMS result = MMSService.valueOf(mmsDao.findOneMMSByMrn(mrn));
-            if(result ==null){
-                throw new NullResultException();
-            }else {
-                mmsDao.delete(MMSService.valueOf(result));
-            }
-        }catch(NullResultException n) {
-            throw new NullResultException();
+
+            mmsDao.delete(MMSService.valueOf(result));
+        }catch(NullPointerException n) {
+            throw new NullResultException("HM03001N");
         }catch(Exception e){
             throw new SystemException();
         }

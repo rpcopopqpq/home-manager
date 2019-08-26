@@ -2,6 +2,7 @@ package kr.co.nexsys.mcp.homemanager.mms.controller;
 
 import kr.co.nexsys.mcp.homemanager.mms.controller.dto.MMSDto;
 import kr.co.nexsys.mcp.homemanager.mms.controller.dto.MMSFindAllResDto;
+import kr.co.nexsys.mcp.homemanager.mms.controller.dto.MMSModifyReqDto;
 import kr.co.nexsys.mcp.homemanager.mms.service.MMSService;
 import kr.co.nexsys.mcp.homemanager.mms.service.vo.MMS;
 import lombok.extern.slf4j.Slf4j;
@@ -56,10 +57,10 @@ public class MMSController {
 
     @PutMapping(value = "/{mrn}")
     public ResponseEntity<?> modifyMMS(@PathVariable String mrn,
-                                      @RequestBody @Valid MMSDto mmsDto){
-        log.debug("update Data :" + mmsDto +", mrn :" + mrn);
+                                      @RequestBody @Valid MMSModifyReqDto mmsModifyReqDto){
+        log.debug("update Data :" + mmsModifyReqDto +", mrn :" + mrn);
 
-        mmsService.modifyMMS(mrn,MMSController.valueOf(mmsDto));
+        mmsService.modifyMMS(mrn,MMSController.valueOf(mmsModifyReqDto));
         return ResponseEntity.ok("OK");
     }
 
@@ -77,6 +78,13 @@ public class MMSController {
                 .mrn(mmsDto.getMrn())
                 .ip(mmsDto.getIp())
                 .port(mmsDto.getPort())
+                .build();
+    }
+
+    private static MMS valueOf(MMSModifyReqDto mmsModifyReqDto){
+        return MMS.builder()
+                .ip(mmsModifyReqDto.getIp())
+                .port(mmsModifyReqDto.getPort())
                 .build();
     }
 

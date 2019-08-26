@@ -2,6 +2,7 @@ package kr.co.nexsys.mcp.homemanager.mms.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.co.nexsys.mcp.homemanager.mms.controller.dto.MMSDto;
+import kr.co.nexsys.mcp.homemanager.mms.controller.dto.MMSModifyReqDto;
 import kr.co.nexsys.mcp.homemanager.mms.service.MMSService;
 import kr.co.nexsys.mcp.homemanager.mms.service.vo.MMS;
 import org.assertj.core.util.Lists;
@@ -32,35 +33,11 @@ public class MMSControllerTest {
     @Autowired
     MockMvc mockMvc;
     @MockBean
+    MMSController mmsController;
+    @MockBean
     MMSService mmsService;
     @Autowired
     ObjectMapper objectMapper;
-
-    //MRN으로부터 MMS 조회
-    @Test
-    public void findMMS() throws Exception{
-        String mrn = "urn:home:mms:test:test-0.0.1v";
-        MMS mms = MMS.builder()
-                .mrn(mrn)
-                .ip("127.0.0.1")
-                .port(1101)
-                .build();
-
-        //given
-        given(mmsService.findMMSByMrn(mrn)).willReturn(Lists.list(mms));
-        //when,then
-        mockMvc.perform(
-                get("/mms/"+mrn)
-                        .contentType(MediaType.APPLICATION_JSON_UTF8)
-                        .content(objectMapper.writeValueAsString("{}")))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.mmsinfo.[0].mrn",equalTo(mms.getMrn())))
-                .andExpect(jsonPath("$.mmsinfo.[0].ip",equalTo(mms.getIp())))
-                .andExpect(jsonPath("$.mmsinfo.[0].port",equalTo(mms.getPort())))
-                //.andExpect(jsonPath("$.mmsinfo.[0].createDate",equalTo(mms.getCreateDate().toString())))
-                .andExpect(jsonPath("$.mmsinfo.[0].updateDate",equalTo(null)));
-    }
 
     //전체 MMS 조회
     @Test
@@ -81,89 +58,91 @@ public class MMSControllerTest {
                         .content(objectMapper.writeValueAsString("{}")))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.mmsinfo.[0].mrn",equalTo(mms.getMrn())))
-                .andExpect(jsonPath("$.mmsinfo.[0].ip",equalTo(mms.getIp())))
-                .andExpect(jsonPath("$.mmsinfo.[0].port",equalTo(mms.getPort())))
-                //.andExpect(jsonPath("$.mmsinfo.[0].createDate",equalTo(mms.getCreateDate().toString())))
-                .andExpect(jsonPath("$.mmsinfo.[0].updateDate",equalTo(null)));
+                .andExpect(jsonPath("$.mmsList.[0].mrn",equalTo(mms.getMrn())))
+                .andExpect(jsonPath("$.mmsList.[0].ip",equalTo(mms.getIp())))
+                .andExpect(jsonPath("$.mmsList.[0].port",equalTo(mms.getPort())));
+    }
+
+    //MRN으로부터 MMS 조회
+    @Test
+    public void findMMS() throws Exception{
+        String mrn = "urn:home:mms:test:test:test:test-0.0.1v";
+        MMS mms = MMS.builder()
+                .mrn(mrn)
+                .ip("127.0.0.1")
+                .port(1101)
+                .build();
+
+        //given
+        given(mmsService.findMMSByMrn(mrn)).willReturn(mms);
+        //when,then
+        mockMvc.perform(
+                get("/mms/"+mrn)
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .content(objectMapper.writeValueAsString(mms)))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.mrn",equalTo(mms.getMrn())))
+                .andExpect(jsonPath("$.ip",equalTo(mms.getIp())))
+                .andExpect(jsonPath("$.port",equalTo(mms.getPort())));
     }
 
     //MMS 생성
     @Test
     public void createMMS() throws Exception{
-        List<MMSDto> result = new ArrayList<>();
-        MMSDto mmsDto = MMSDto.builder()
-                //.mrn("urn:home:mms:test:test-0.0.1v")
-                .ip("127.0.0.1")
-                .port(1101)
-                .createDate(LocalDateTime.now())
-                .build();
-        result.add(mmsDto);
-
         MMS mms = MMS.builder()
-                .mrn("urn:home:mms:test:test-0.0.1v")
+                .mrn("urn:mrn:smart:test:test:test:test")
                 .ip("127.0.0.1")
                 .port(1101)
-                .createDate(LocalDateTime.now())
                 .build();
 
         //given
-        //given(mmsService.createMMS(result)).willReturn(null);
+        given(mmsService.createMMS(mms)).willReturn(mms);
+
         //when,then
         mockMvc.perform(
                 post("/mms")
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
-                        .content(objectMapper.writeValueAsString(result)))
+                        .content(objectMapper.writeValueAsString(mms)))
                 .andDo(print())
-                .andExpect(status().isOk());
-//                .andExpect(jsonPath("$.mmsinfo.[0].mrn",equalTo(mms.getMrn())))
-//                .andExpect(jsonPath("$.mmsinfo.[0].ip",equalTo(mms.getIp())))
-//                .andExpect(jsonPath("$.mmsinfo.[0].port",equalTo(mms.getPort())))
-//                //.andExpect(jsonPath("$.mmsinfo.[0].createDate",equalTo(mms.getCreateDate().toString())))
-//                .andExpect(jsonPath("$.mmsinfo.[0].updateDate",equalTo(null)));
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.mrn",equalTo(mms.getMrn())))
+                .andExpect(jsonPath("$.ip",equalTo(mms.getIp())))
+                .andExpect(jsonPath("$.port",equalTo(mms.getPort())));
     }
 
     //MMS 수정
     @Test
     public void modifyMMS() throws Exception{
         String mrn = "urn:home:mms:test:test-0.0.2v";
-        MMS mms = MMS.builder()
-                .mrn(mrn)
-                .ip("127.0.0.1")
-                .port(1101)
-                .createDate(LocalDateTime.now())
+        MMSModifyReqDto mmsModifyReqDto = MMSModifyReqDto.builder()
+                .ip("127.0.0.3")
+                .port(11)
                 .build();
 
         //given
-      //  given(mmsService.modifyMMS(mrn,mms)).willReturn(Lists.list(mms));
+        given(mmsController.modifyMMS(mrn,mmsModifyReqDto));
         //when,then
         mockMvc.perform(
                 patch("/mms/"+mrn)
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
-                        .content(objectMapper.writeValueAsString(mms)))
+                        .content(objectMapper.writeValueAsString(mmsModifyReqDto)))
                 .andDo(print())
                 .andExpect(status().isOk());
-//                .andExpect(jsonPath("$.mmsinfo.[0].mrn",equalTo(mrn)))
-//                .andExpect(jsonPath("$.mmsinfo.[0].ip",equalTo(mms.getIp())))
-//                .andExpect(jsonPath("$.mmsinfo.[0].port",equalTo(mms.getPort())))
-//                //.andExpect(jsonPath("$.mmsinfo.[0].createDate",equalTo(mms.getCreateDate().toString())))
-//                .andExpect(jsonPath("$.mmsinfo.[0].updateDate",equalTo(null)));
-
     }
 
+    //삭제
     @Test
     public void removeMMS() throws Exception{
-        boolean result = true;
         String mrn = "urn:home:mms:test:test-0.0.2v";
-        MMS mms = MMS.builder()
+        MMSDto mmsDto = MMSDto.builder()
                 .mrn("urn:home:mms:test:test-0.0.2v")
                 .ip("127.0.0.1")
                 .port(1101)
-                .createDate(LocalDateTime.now())
                 .build();
 
         //given
-      //  given(mmsService.removeMMS(mrn)).willReturn(true);
+
         //when,then
         mockMvc.perform(
                 delete("/mms/" + mrn)
@@ -171,9 +150,5 @@ public class MMSControllerTest {
                         .content(objectMapper.writeValueAsString("{}")))
                 .andDo(print())
                 .andExpect(status().isOk());
-                //.andExpect(jsonPath("$msg",equalTo("Delete Success!")))
-
     }
-
-
 }
