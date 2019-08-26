@@ -7,7 +7,6 @@ import java.util.List;
 
 @Builder
 @Getter
-public class MMSResponseDto {
-    private List<MMSDto> MMSInfo;
-    private String message;
+public class MMSFindAllResDto {
+    private List<MMSDto> MMSList;
 }

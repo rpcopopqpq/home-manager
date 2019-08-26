@@ -49,21 +49,19 @@ public class MMSService {
             } else {
                 return result;
             }
-        }catch(NullResultException n) {
+        }catch(NullResultException n){
             throw new NullResultException();
         }catch(Exception e){
-            throw new DatabaseException("find");
+            throw new SystemException();
         }
     }
 
     //MMS 조회
     @Transactional(readOnly = true)
-    public List<MMS> findMMSByMrn(String mrn) {
+    public MMS findMMSByMrn(String mrn) {
         try {
-            List<MMS> result = mmsDao.findOneMMSByMrn(mrn).stream()
-                    .map(MMSService::valueOf)
-                    .collect(Collectors.toList());
-            if (result.isEmpty()) {
+            MMS result = MMSService.valueOf(mmsDao.findOneMMSByMrn(mrn));
+            if (result ==null) {
                 throw new NullResultException();
             } else {
                 return result;
@@ -71,17 +69,19 @@ public class MMSService {
         }catch(NullResultException n) {
             throw new NullResultException();
         }catch(Exception e){
-            throw new DatabaseException("find");
+            throw new SystemException();
         }
     }
 
     //MMS 생성
-    public void createMMS(MMS mms) {
+    public MMS createMMS(MMS mms) {
         try {
-            //생성
-            mmsDao.saveAndFlush(MMSService.valueOf(mms));
+            MMS result = MMSService.valueOf(mmsDao.saveAndFlush(MMSService.valueOf(mms)));
+            return MMS.builder().mrn(result.getMrn())
+                                   .ip(result.getIp())
+                                   .port(result.getPort()).build();
         }catch(Exception e){
-            throw new DatabaseException("create");
+            throw new SystemException();
         }
     }
 
@@ -89,44 +89,35 @@ public class MMSService {
     public void modifyMMS(String mrn, MMS mms) {
         try {
             //mrn에 해당하는 mms 조회
-            List<MMS> mmsList = mmsDao.findOneMMSByMrn(mrn).stream()
-                                                           .map(MMSService::valueOf)
-                                                           .collect(Collectors.toList());
-            if(mmsList.isEmpty()){
+            MMS result = MMSService.valueOf(mmsDao.findOneMMSByMrn(mrn));
+            if(result ==null){
                 throw new NullResultException();
             }else {
-                // 수정
-                for(MMS m : mmsList){
-                    mmsDao.saveAndFlush(MMSService.valueOf(mms));
-                }
+                result.setIp(mms.getIp());
+                result.setPort(mms.getPort());
+                mmsDao.saveAndFlush(MMSService.valueOf(result));
             }
         }catch(NullResultException n) {
             throw new NullResultException();
         }catch(Exception e){
-            throw new DatabaseException("modify");
+            throw new SystemException();
         }
     }
 
     //MMS 삭제
     public void removeMMS(String mrn) {
-        boolean result = false;
         try {
             //mrn에 해당하는 mms 조회
-            List<MMS> mmsList = mmsDao.findOneMMSByMrn(mrn).stream()
-                    .map(MMSService::valueOf)
-                    .collect(Collectors.toList());
-            if(mmsList.isEmpty()){
+            MMS result = MMSService.valueOf(mmsDao.findOneMMSByMrn(mrn));
+            if(result ==null){
                 throw new NullResultException();
             }else {
-                //삭제
-                for (MMS mms : mmsList) {
-                    mmsDao.delete(MMSService.valueOf(mms));
-                }
+                mmsDao.delete(MMSService.valueOf(result));
             }
         }catch(NullResultException n) {
             throw new NullResultException();
         }catch(Exception e){
-            throw new DatabaseException("delete");
+            throw new SystemException();
         }
     }
 
@@ -136,8 +127,6 @@ public class MMSService {
                 .mrn(mmsDvo.getMrn())
                 .ip(mmsDvo.getIp())
                 .port(mmsDvo.getPort())
-                .createDate(mmsDvo.getCreateDate())
-                .updateDate(mmsDvo.getUpdateDate())
                 .build();
     }
 
@@ -146,19 +135,6 @@ public class MMSService {
                 .mrn(mms.getMrn())
                 .ip(mms.getIp())
                 .port(mms.getPort())
-                .createDate(mms.getCreateDate())
-                .updateDate(mms.getUpdateDate())
                 .build();
     }
-
-    private static MMSDvo valueOf(MMSDto mmsDto){
-        return MMSDvo.builder()
-                .mrn(mmsDto.getMrn())
-                .ip(mmsDto.getIp())
-                .port(mmsDto.getPort())
-                .createDate(mmsDto.getCreateDate())
-                .updateDate(mmsDto.getUpdateDate())
-                .build();
-    }
-
 }

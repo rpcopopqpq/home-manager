@@ -2,7 +2,6 @@ package kr.co.nexsys.mcp.homemanager.mms.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.co.nexsys.mcp.homemanager.mms.controller.dto.MMSDto;
-import kr.co.nexsys.mcp.homemanager.mms.controller.dto.MMSResponseDto;
 import kr.co.nexsys.mcp.homemanager.mms.service.MMSService;
 import kr.co.nexsys.mcp.homemanager.mms.service.vo.MMS;
 import org.assertj.core.util.Lists;

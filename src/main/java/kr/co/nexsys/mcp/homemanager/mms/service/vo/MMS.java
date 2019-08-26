@@ -16,6 +16,4 @@ public class MMS {
     private String mrn;
     private String ip;
     private Integer port;
-    private LocalDateTime createDate;
-    private LocalDateTime updateDate;
 }
