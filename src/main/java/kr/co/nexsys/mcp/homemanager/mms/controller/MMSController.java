@@ -7,6 +7,7 @@ import kr.co.nexsys.mcp.homemanager.mms.service.MMSService;
 import kr.co.nexsys.mcp.homemanager.mms.service.vo.MMS;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,7 +35,7 @@ public class MMSController {
     }
 
     @GetMapping(value = "/{mrn}")
-    public ResponseEntity<MMSDto> findMMS(@PathVariable String mrn){
+    public ResponseEntity<MMSDto> findMMS(@PathVariable("mrn") String mrn){
         log.debug("find mms, mrn :" + mrn);
 
         MMS result = mmsService.findMMSByMrn(mrn);
@@ -56,7 +57,7 @@ public class MMSController {
     }
 
     @PutMapping(value = "/{mrn}")
-    public ResponseEntity<?> modifyMMS(@PathVariable String mrn,
+    public ResponseEntity<?> modifyMMS(@PathVariable("mrn") String mrn,
                                       @RequestBody @Valid MMSModifyReqDto mmsModifyReqDto){
         log.debug("update Data :" + mmsModifyReqDto +", mrn :" + mrn);
 

@@ -9,7 +9,7 @@ import javax.validation.constraints.*;
 @AllArgsConstructor
 @Getter
 public class MMSDto {
-    @NotEmpty @Pattern(regexp = "^urn:mrn:smart:\\[]{4,10}:\\[]{4,10}]:\\[]{4,10}:\\[]{4,20}")
+    @NotEmpty @Pattern(regexp = "^(urn:mrn:smart:)[a-z]\\w{0,5}:[a-z]\\w{0,5}:[a-z]\\w{0,5}:[a-zA-Z]\\w{0,10}")
     private String mrn;
     @NotEmpty @Pattern(regexp = "^[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}$")
     private String ip;
