@@ -1,10 +1,13 @@
-package kr.co.nexsys.mcp.homemanager.homemms.controller;
+package kr.co.nexsys.mcp.homemanager.home_mms.controller;
 
 
-import kr.co.nexsys.mcp.homemanager.homemms.controller.dto.HomeMMSDto;
-import kr.co.nexsys.mcp.homemanager.homemms.controller.dto.HomeMMSModifyReqDto;
-import kr.co.nexsys.mcp.homemanager.homemms.service.HomeMMSService;
-import kr.co.nexsys.mcp.homemanager.homemms.service.vo.HomeMMS;
+import kr.co.nexsys.mcp.homemanager.home_mms.controller.dto.HomeMMSDto;
+import kr.co.nexsys.mcp.homemanager.home_mms.controller.dto.HomeMMSFindResDto;
+import kr.co.nexsys.mcp.homemanager.home_mms.controller.dto.HomeMMSModifyReqDto;
+import kr.co.nexsys.mcp.homemanager.home_mms.service.HomeMMSService;
+import kr.co.nexsys.mcp.homemanager.mms.controller.MMSController;
+import kr.co.nexsys.mcp.homemanager.mms.controller.dto.MMSDto;
+import kr.co.nexsys.mcp.homemanager.mms.service.vo.MMS;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +26,10 @@ public class HomeMMSController {
     @GetMapping("/{mrn}/home-mms")
     public ResponseEntity<?> findHomeMMS(@PathVariable("mrn") String mrn){
         //TODO : entity mrn의 Home MMS 조회
-        return ResponseEntity.ok("OK");
+        return ResponseEntity.ok(HomeMMSFindResDto.builder()
+                                    .mrn(mrn)
+                                    .homeMmsDto(HomeMMSController.valueOf(homeMMSService.findHomeMMS(mrn)))
+                                    .build());
     }
 
     @PostMapping("/home-mms")
@@ -46,5 +52,12 @@ public class HomeMMSController {
         return ResponseEntity.ok("OK");
     }
 
+    private static MMSDto valueOf(MMS mms){
+        return MMSDto.builder()
+                .mrn(mms.getMrn())
+                .ip(mms.getIp())
+                .port(mms.getPort())
+                .build();
+    }
 
 }

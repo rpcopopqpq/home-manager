@@ -1,7 +1,8 @@
-package kr.co.nexsys.mcp.homemanager.homemms.service;
+package kr.co.nexsys.mcp.homemanager.home_mms.service;
 
-import kr.co.nexsys.mcp.homemanager.homemms.dao.HomeMMSDao;
-import kr.co.nexsys.mcp.homemanager.homemms.service.vo.HomeMMS;
+import kr.co.nexsys.mcp.homemanager.home_mms.dao.HomeMMSDao;
+import kr.co.nexsys.mcp.homemanager.home_mms.service.vo.HomeMMS;
+import kr.co.nexsys.mcp.homemanager.mms.service.vo.MMS;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,8 +20,8 @@ public class HomeMMSService {
     public HomeMMSService(HomeMMSDao homeMMSDao) {this.homeMMSDao = homeMMSDao;}
 
     //homeMMS 조회
-    public HomeMMS findHomeMMS(String mrn){
-        HomeMMS homeMMS = new HomeMMS();
+    public MMS findHomeMMS(String mrn){
+        MMS mms = new MMS();
         //TODO : entity mrn의 Home MMS 조회
         /*
         오류 처리 방식
@@ -28,7 +29,7 @@ public class HomeMMSService {
         HM02002R : 데이터 형식이 틀립니다.
          */
 
-        return homeMMS;
+        return mms;
     }
 
     //homeMMS 생성

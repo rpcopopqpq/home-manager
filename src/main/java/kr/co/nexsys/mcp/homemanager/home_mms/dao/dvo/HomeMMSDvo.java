@@ -1,4 +1,4 @@
-package kr.co.nexsys.mcp.homemanager.homemms.dao.dvo;
+package kr.co.nexsys.mcp.homemanager.home_mms.dao.dvo;
 
 
 import lombok.*;
