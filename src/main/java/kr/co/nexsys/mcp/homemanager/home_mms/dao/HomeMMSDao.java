@@ -4,5 +4,5 @@ import kr.co.nexsys.mcp.homemanager.home_mms.dao.dvo.HomeMMSDvo;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface HomeMMSDao extends JpaRepository<HomeMMSDvo,Long> {
-    HomeMMSDvo findOneHomeMMS(String mrn);
+    HomeMMSDvo findOneHomeMMSByMrn(String mrn);
 }

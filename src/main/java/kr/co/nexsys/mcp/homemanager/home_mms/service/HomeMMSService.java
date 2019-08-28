@@ -2,8 +2,6 @@ package kr.co.nexsys.mcp.homemanager.home_mms.service;
 
 import kr.co.nexsys.mcp.homemanager.exception.NullResultException;
 import kr.co.nexsys.mcp.homemanager.exception.SystemException;
-import kr.co.nexsys.mcp.homemanager.home_mms.controller.dto.HomeMMSCreateReqDto;
-import kr.co.nexsys.mcp.homemanager.home_mms.controller.dto.HomeMMSModifyReqDto;
 import kr.co.nexsys.mcp.homemanager.home_mms.dao.HomeMMSDao;
 import kr.co.nexsys.mcp.homemanager.home_mms.dao.dvo.HomeMMSDvo;
 import kr.co.nexsys.mcp.homemanager.home_mms.service.vo.HomeMMS;
@@ -57,7 +55,7 @@ public class HomeMMSService {
     public HomeMMS modifyHomeMMS(String mrn, HomeMMS homeMMS){
         try{
             MMSDvo mmsDvo =mmsDao.findOneMMSByMrn(homeMMS.getMrn_mms());
-            HomeMMSDvo homeMMSDvo =homeMMSDao.findOneHomeMMS(mrn);
+            HomeMMSDvo homeMMSDvo =homeMMSDao.findOneHomeMMSByMrn(mrn);
             //entity mrn이나 mms mrn 중 둘중 하나라도 존재하지 않으면 HM03002N 에러 출력
             homeMMSDvo.setMrn_mms(homeMMS.getMrn_mms());
             return HomeMMSService.valueOf(homeMMSDao.saveAndFlush(HomeMMSService.valueOf(homeMMS)));
@@ -71,7 +69,7 @@ public class HomeMMSService {
     //homeMMS 삭제
     public void deleteHomeMMS(String mrn){
         try{
-            HomeMMSDvo homeMMSDvo =homeMMSDao.findOneHomeMMS(mrn);
+            HomeMMSDvo homeMMSDvo =homeMMSDao.findOneHomeMMSByMrn(mrn);
             homeMMSDao.delete(homeMMSDvo);
         }catch(NullPointerException n){
             throw new NullResultException("HM03002N");

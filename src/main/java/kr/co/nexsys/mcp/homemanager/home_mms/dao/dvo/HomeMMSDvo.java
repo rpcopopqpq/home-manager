@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
 @Entity
 @Setter
 @Getter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class HomeMMSDvo {
