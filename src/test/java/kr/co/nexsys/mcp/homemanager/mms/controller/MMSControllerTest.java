@@ -75,9 +75,9 @@ public class MMSControllerTest {
                                              .andDo(print());
         //then
         resultActions.andExpect(status().isOk())
-                     .andExpect(jsonPath("$.mrn", equalTo(mms.getMrn())))
-                     .andExpect(jsonPath("$.ip", equalTo(mms.getIp())))
-                     .andExpect(jsonPath("$.port", equalTo(mms.getPort())));
+                     .andExpect(jsonPath("$.mmsDto.mrn", equalTo(mms.getMrn())))
+                     .andExpect(jsonPath("$.mmsDto.ip", equalTo(mms.getIp())))
+                     .andExpect(jsonPath("$.mmsDto.port", equalTo(mms.getPort())));
     }
 
     //MMS 생성
@@ -97,9 +97,9 @@ public class MMSControllerTest {
                                              .andDo(print());
         //then
         resultActions.andExpect(status().isOk())
-                     .andExpect(jsonPath("$.mrn", equalTo(mms.getMrn())))
-                     .andExpect(jsonPath("$.ip", equalTo(mms.getIp())))
-                     .andExpect(jsonPath("$.port", equalTo(mms.getPort())));
+                     .andExpect(jsonPath("$.mmsDto.mrn", equalTo(mms.getMrn())))
+                     .andExpect(jsonPath("$.mmsDto.ip", equalTo(mms.getIp())))
+                     .andExpect(jsonPath("$.mmsDto.port", equalTo(mms.getPort())));
 
     }
 
@@ -118,7 +118,10 @@ public class MMSControllerTest {
                                              .content(objectMapper.writeValueAsString(mms)))
                                              .andDo(print());
         //then
-        resultActions.andExpect(status().isOk());
+        resultActions.andExpect(status().isOk())
+                    .andExpect(jsonPath("$.mmsDto.mrn", equalTo(mms.getMrn())))
+                    .andExpect(jsonPath("$.mmsDto.ip", equalTo(mms.getIp())))
+                    .andExpect(jsonPath("$.mmsDto.port", equalTo(mms.getPort())));
     }
 
     //삭제
@@ -126,15 +129,8 @@ public class MMSControllerTest {
     public void removeMMS() throws Exception{
         //given
         String mrn = "urn:home:mms:test:test-0.0.2v";
-        MMS mms = MMS.builder()
-                .ip("127.0.0.3")
-                .port(11)
-                .build();
         //when
-        ResultActions resultActions = mockMvc.perform(delete("/mms/"+mrn)
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .content(objectMapper.writeValueAsString(mms)))
-                .andDo(print());
+        ResultActions resultActions = mockMvc.perform(delete("/mms/"+mrn)).andDo(print());
         //then
         resultActions.andExpect(status().isOk());
     }

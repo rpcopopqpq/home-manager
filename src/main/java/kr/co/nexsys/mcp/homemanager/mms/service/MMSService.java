@@ -33,12 +33,9 @@ public class MMSService {
             List<MMS> result = mmsDao.findAll().stream()
                                                .map(MMSService::valueOf)
                                                .collect(Collectors.toList());
-            if (result.isEmpty()) {
-                throw new NullResultException("HM03001N");
-            } else {
-                return result;
-            }
-        }catch(NullResultException n){
+
+            return result;
+        }catch(NullPointerException n){
             throw new NullResultException("HM03001N");
         }catch(Exception e){
             e.printStackTrace();
@@ -71,14 +68,14 @@ public class MMSService {
     }
 
     //MMS 수정
-    public void modifyMMS(String mrn, MMS mms) {
+    public MMS modifyMMS(String mrn, MMS mms) {
         try {
             //mrn에 해당하는 mms 조회
             MMS result = MMSService.valueOf(mmsDao.findOneMMSByMrn(mrn));
 
             result.setIp(mms.getIp());
             result.setPort(mms.getPort());
-            mmsDao.saveAndFlush(MMSService.valueOf(result));
+            return MMSService.valueOf(mmsDao.saveAndFlush(MMSService.valueOf(result)));
         }catch(NullPointerException n) {
             throw new NullResultException("HM03001N");
         }catch(Exception e){
@@ -91,7 +88,6 @@ public class MMSService {
         try {
             //mrn에 해당하는 mms 조회
             MMS result = MMSService.valueOf(mmsDao.findOneMMSByMrn(mrn));
-
             mmsDao.delete(MMSService.valueOf(result));
         }catch(NullPointerException n) {
             throw new NullResultException("HM03001N");
