@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @Slf4j
 @RestController
 @RequestMapping("/entity")
@@ -30,7 +32,7 @@ public class HomeMMSController {
     }
 
     @PostMapping("/home-mms")
-    public ResponseEntity<HomeMMSCreateResDto> createHomeMMS(@RequestBody HomeMMSCreateReqDto homeMMSCreateReqDto){
+    public ResponseEntity<HomeMMSCreateResDto> createHomeMMS(@RequestBody @Valid HomeMMSCreateReqDto homeMMSCreateReqDto){
         return ResponseEntity.ok(HomeMMSCreateResDto.builder()
                                     .homeMmsDto(HomeMMSController.valueOf(homeMMSService.createHomeMMS(HomeMMSController.valueOf(homeMMSCreateReqDto))))
                                     .build());
@@ -38,7 +40,7 @@ public class HomeMMSController {
 
     @PutMapping("/{mrn}/home-mms")
     public ResponseEntity<HomeMMSModifyResDto> modifyHomeMMS(@PathVariable("mrn") String mrn,
-                                                       @RequestBody HomeMMSModifyReqDto homeMMSModifyReqDto){
+                                                       @RequestBody @Valid HomeMMSModifyReqDto homeMMSModifyReqDto){
         return ResponseEntity.ok(HomeMMSModifyResDto.builder()
                                     .homeMmsDto(HomeMMSController.valueOf(homeMMSService.modifyHomeMMS(mrn,HomeMMSController.valueOf(homeMMSModifyReqDto))))
                                     .build());

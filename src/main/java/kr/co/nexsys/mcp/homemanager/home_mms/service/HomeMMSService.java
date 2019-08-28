@@ -9,6 +9,7 @@ import kr.co.nexsys.mcp.homemanager.mms.dao.MMSDao;
 import kr.co.nexsys.mcp.homemanager.mms.dao.dvo.MMSDvo;
 import kr.co.nexsys.mcp.homemanager.mms.service.vo.MMS;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.HibernateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -32,7 +33,8 @@ public class HomeMMSService {
     //homeMMS 조회
     public MMS findHomeMMS(String mrn){
         try{
-             return HomeMMSService.valueOf(mmsDao.findOneMMSByMrn(mrn));
+             HomeMMSDvo homeMMSDvo =homeMMSDao.findOneHomeMMSByMrn(mrn);
+             return HomeMMSService.valueOf(mmsDao.findOneMMSByMrn(homeMMSDvo.getMrn_mms()));
         }catch(NullPointerException n){
             throw new NullResultException("HM03002N");
         }catch(Exception e){
@@ -57,9 +59,13 @@ public class HomeMMSService {
             MMSDvo mmsDvo =mmsDao.findOneMMSByMrn(homeMMS.getMrn_mms());
             HomeMMSDvo homeMMSDvo =homeMMSDao.findOneHomeMMSByMrn(mrn);
             //entity mrn이나 mms mrn 중 둘중 하나라도 존재하지 않으면 HM03002N 에러 출력
-            homeMMSDvo.setMrn_mms(homeMMS.getMrn_mms());
-            return HomeMMSService.valueOf(homeMMSDao.saveAndFlush(HomeMMSService.valueOf(homeMMS)));
-        }catch(NullPointerException n){
+            if(mmsDvo==null || homeMMSDvo==null){
+                throw new NullResultException("HM03002N");
+            }else{
+                homeMMSDvo.setMrn_mms(homeMMS.getMrn_mms());
+                return HomeMMSService.valueOf(homeMMSDao.saveAndFlush(homeMMSDvo));
+            }
+        }catch(NullResultException n){
             throw new NullResultException("HM03002N");
         }catch(Exception e){
             throw new SystemException();

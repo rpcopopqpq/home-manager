@@ -34,8 +34,12 @@ public class MMSService {
                                                .map(MMSService::valueOf)
                                                .collect(Collectors.toList());
 
-            return result;
-        }catch(NullPointerException n){
+            if(result.isEmpty()){
+                throw new NullResultException("HM03001N");
+            }else{
+                return result;
+            }
+        }catch(NullResultException n){
             throw new NullResultException("HM03001N");
         }catch(Exception e){
             e.printStackTrace();
