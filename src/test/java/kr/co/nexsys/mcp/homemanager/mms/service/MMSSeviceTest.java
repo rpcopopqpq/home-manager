@@ -94,4 +94,31 @@ public class MMSSeviceTest {
         assertThat(result.getIp(), equalTo(mmsDvo.getIp()));
         assertThat(result.getPort(), equalTo(mmsDvo.getPort()));
     }
+
+    //MMS 수정
+    @Test
+    public void shouldModifyMMS(){
+        //given
+        MMSDvo mmsDvo = MMSDvo.builder()
+                .ip("192.168.56.100")
+                .mrn("urn:mrn:smart:test:test:test:test2")
+                .port(100)
+                .build();
+        MMS mms = MMS.builder()
+                .ip("127.0.0.1")
+                .mrn("urn:mrn:smart:test:test:test:test2")
+                .port(123)
+                .build();
+
+        when(mmsDao.saveAndFlush(mmsDvo)).thenReturn(mmsDvo);
+        when(mmsDao.findOneMMSByMrn(mms.getMrn())).thenReturn(mmsDvo);
+        //when
+        mms.setIp("192.168.56.100");
+        mms.setPort(100);
+        MMS result = mmsService.modifyMMS(mms.getMrn(),mms);
+        //then
+        assertThat(result.getMrn(), equalTo(mmsDvo.getMrn()));
+        assertThat(result.getIp(), equalTo(mmsDvo.getIp()));
+        assertThat(result.getPort(), equalTo(mmsDvo.getPort()));
+    }
 }
