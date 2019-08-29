@@ -7,7 +7,6 @@ CREATE TABLE T_TEST
     create_date datetime    NOT NULL,
     PRIMARY KEY (id)
 );
-
 CREATE TABLE MMS
 (
     MRN         VARCHAR(255) NOT NULL,
