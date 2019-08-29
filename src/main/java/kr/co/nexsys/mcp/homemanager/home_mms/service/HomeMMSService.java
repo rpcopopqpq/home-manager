@@ -75,8 +75,8 @@ public class HomeMMSService {
     //homeMMS 삭제
     public void deleteHomeMMS(String mrn){
         try{
-            HomeMMSDvo homeMMSDvo =homeMMSDao.findOneHomeMMSByMrn(mrn);
-            homeMMSDao.delete(homeMMSDvo);
+            HomeMMS homeMMS = HomeMMSService.valueOf(homeMMSDao.findOneHomeMMSByMrn(mrn));
+            homeMMSDao.delete(HomeMMSService.valueOf(homeMMS));
         }catch(NullPointerException n){
             throw new NullResultException("HM03002N");
         }catch(Exception e){
