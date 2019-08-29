@@ -1,8 +1,7 @@
-package kr.co.nexsys.mcp.homemanager.test.dao;
+package kr.co.nexsys.mcp.homemanager.user.dao;
 
 import kr.co.nexsys.mcp.homemanager.common.utils.TestDataGenerator;
-import kr.co.nexsys.mcp.homemanager.test.dao.dvo.TestDvo;
-import org.assertj.core.util.Lists;
+import kr.co.nexsys.mcp.homemanager.user.dao.dvo.UserDvo;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,10 +10,8 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.List;
 import java.util.Optional;
 
-import static kr.co.nexsys.mcp.homemanager.common.utils.TestDataGenerator.defaultDepartment;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
@@ -24,14 +21,13 @@ import static org.junit.Assert.assertThat;
 @ActiveProfiles("test")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @DataJpaTest
-public class TestDaoTest {
-
+public class UserDaoTest {
     @Autowired
-    private TestDao dao;
+    private UserDao dao;
 
     @Test
     public void shouldSave() {
-        TestDvo dvo = TestDataGenerator.buildTestDvo();
+        UserDvo dvo = TestDataGenerator.buildUserDvo();
         assertThat(dvo.getId(), nullValue());
         dao.saveAndFlush(dvo);
         assertThat(dvo.getId(), notNullValue());
@@ -40,31 +36,20 @@ public class TestDaoTest {
 
     @Test
     public void shouldFindById() {
-        TestDvo origin = TestDataGenerator.buildTestDvo();
+        UserDvo origin = TestDataGenerator.buildUserDvo();
         dao.save(origin);
 
-        Optional<TestDvo> actual = dao.findById(origin.getId());
+        Optional<UserDvo> actual = dao.findById(origin.getId());
         assertThat(actual.isPresent(), is(true));
         assertThat(actual.get().getId(), is(origin.getId()));
     }
 
     @Test
     public void shouldDelete() {
-        TestDvo origin = dao.save(TestDataGenerator.buildTestDvo());
+        UserDvo origin = dao.save(TestDataGenerator.buildUserDvo());
         assertThat(dao.findById(origin.getId()).isPresent(), is(true));
         dao.delete(origin);
         assertThat(dao.findById(origin.getId()).isPresent(), is(false));
-    }
-
-
-    @Test
-    public void shouldfindAllByDepartment() {
-        List<TestDvo> origin =
-                dao.saveAll(Lists.list(TestDataGenerator.buildTestDvo(), TestDataGenerator.buildTestDvo()));
-
-        List<TestDvo> actual = dao.findAllByDepartment(defaultDepartment);
-        assertThat(actual.stream().filter(origin::contains).count(), is(2L));
-
     }
 
 

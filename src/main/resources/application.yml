@@ -5,6 +5,14 @@ spring:
 server:
   port: 8081
 
+app:
+  organization: urn:mrn:mcl:org:maritimecloud
+
+spring.mvc.view.prefix: /WEB-INF/views/
+spring.mvc.view.suffix: .jsp
+spring.mvc.static-path-pattern: /resources/static/**
+
+
 # local
 ---
 spring.profiles: local

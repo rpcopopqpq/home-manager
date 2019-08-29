@@ -1,8 +1,9 @@
 package kr.co.nexsys.mcp.homemanager.test.service;
 
+
+import kr.co.nexsys.mcp.homemanager.common.utils.TestDataGenerator;
 import kr.co.nexsys.mcp.homemanager.test.dao.TestDao;
 import kr.co.nexsys.mcp.homemanager.test.dao.dvo.TestDvo;
-import kr.co.nexsys.mcp.homemanager.util.TestDvoDataGenerator;
 import org.assertj.core.util.Lists;
 import org.junit.Before;
 import org.junit.Test;
@@ -36,7 +37,7 @@ public class TestServiceTest {
 
     @Test
     public void shouldfindTestByDepartment() {
-        TestDvo originDvo = TestDvoDataGenerator.buildTestDvo();
+        TestDvo originDvo = TestDataGenerator.buildTestDvo();
         when(testDao.findAllByDepartment(any())).thenReturn(Lists.list(originDvo));
 
         List<kr.co.nexsys.mcp.homemanager.test.service.vo.Test> actual =

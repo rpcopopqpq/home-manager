@@ -1,8 +1,9 @@
 package kr.co.nexsys.mcp.homemanager.test.service;
 
+
+import kr.co.nexsys.mcp.homemanager.common.utils.TestDataGenerator;
 import kr.co.nexsys.mcp.homemanager.test.dao.TestDao;
 import kr.co.nexsys.mcp.homemanager.test.dao.dvo.TestDvo;
-import kr.co.nexsys.mcp.homemanager.util.TestDvoDataGenerator;
 import org.assertj.core.util.Lists;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,7 +33,7 @@ public class TestServiceTestForTransaction {
 
     @Test(expected = Exception.class)
     public void shouldRollback() {
-        TestDvo origin = testDao.saveAndFlush(TestDvoDataGenerator.buildTestDvo());
+        TestDvo origin = testDao.saveAndFlush(TestDataGenerator.buildTestDvo());
         List<Integer> ids = Lists.list(origin.getId(), null);
         String afterDepartment = "test2";
         try {
