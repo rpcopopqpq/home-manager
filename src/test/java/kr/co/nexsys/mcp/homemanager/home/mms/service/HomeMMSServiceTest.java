@@ -1,8 +1,8 @@
-package kr.co.nexsys.mcp.homemanager.home_mms.service;
+package kr.co.nexsys.mcp.homemanager.home.mms.service;
 
-import kr.co.nexsys.mcp.homemanager.home_mms.dao.HomeMMSDao;
-import kr.co.nexsys.mcp.homemanager.home_mms.dao.dvo.HomeMMSDvo;
-import kr.co.nexsys.mcp.homemanager.home_mms.service.vo.HomeMMS;
+import kr.co.nexsys.mcp.homemanager.home.mms.dao.HomeMMSDao;
+import kr.co.nexsys.mcp.homemanager.home.mms.dao.dvo.HomeMMSDvo;
+import kr.co.nexsys.mcp.homemanager.home.mms.service.vo.HomeMMS;
 import kr.co.nexsys.mcp.homemanager.mms.dao.MMSDao;
 import kr.co.nexsys.mcp.homemanager.mms.dao.dvo.MMSDvo;
 import kr.co.nexsys.mcp.homemanager.mms.service.vo.MMS;

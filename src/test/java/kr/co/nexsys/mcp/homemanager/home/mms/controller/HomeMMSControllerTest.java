@@ -1,16 +1,12 @@
-package kr.co.nexsys.mcp.homemanager.home_mms.controller;
+package kr.co.nexsys.mcp.homemanager.home.mms.controller;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import kr.co.nexsys.mcp.homemanager.home_mms.controller.dto.HomeMMSDto;
-import kr.co.nexsys.mcp.homemanager.home_mms.controller.dto.HomeMMSModifyReqDto;
-import kr.co.nexsys.mcp.homemanager.home_mms.service.HomeMMSService;
-import kr.co.nexsys.mcp.homemanager.home_mms.service.vo.HomeMMS;
-import kr.co.nexsys.mcp.homemanager.mms.controller.dto.MMSDto;
+import kr.co.nexsys.mcp.homemanager.home.mms.service.HomeMMSService;
+import kr.co.nexsys.mcp.homemanager.home.mms.service.vo.HomeMMS;
 import kr.co.nexsys.mcp.homemanager.mms.service.vo.MMS;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;

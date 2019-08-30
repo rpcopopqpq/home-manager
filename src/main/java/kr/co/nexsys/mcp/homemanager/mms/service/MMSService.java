@@ -2,6 +2,7 @@ package kr.co.nexsys.mcp.homemanager.mms.service;
 
 
 
+import kr.co.nexsys.mcp.homemanager.exception.AlreadyExistException;
 import kr.co.nexsys.mcp.homemanager.exception.NullResultException;
 import kr.co.nexsys.mcp.homemanager.exception.SystemException;
 import kr.co.nexsys.mcp.homemanager.mms.dao.MMSDao;
@@ -62,10 +63,16 @@ public class MMSService {
     //MMS 생성
     public MMS createMMS(MMS mms) {
         try {
-            MMS result = MMSService.valueOf(mmsDao.saveAndFlush(MMSService.valueOf(mms)));
-            return MMS.builder().mrn(result.getMrn())
-                                   .ip(result.getIp())
-                                   .port(result.getPort()).build();
+            if(mmsDao.findOneMMSByMrn(mms.getMrn()) !=null){
+                throw new AlreadyExistException();
+            }else {
+                MMS result = MMSService.valueOf(mmsDao.saveAndFlush(MMSService.valueOf(mms)));
+                return MMS.builder().mrn(result.getMrn())
+                        .ip(result.getIp())
+                        .port(result.getPort()).build();
+            }
+        }catch(AlreadyExistException a){
+            throw new AlreadyExistException();
         }catch(Exception e){
             throw new SystemException();
         }

@@ -64,6 +64,15 @@ public class MMSControllerAdvice {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorCodeDto);
     }
 
+    @ExceptionHandler(AlreadyExistException.class)
+    public ResponseEntity<ErrorCodeDto> handleAlreadyExistException(AlreadyExistException e){
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(ErrorCodeDto.builder()
+                        .code(ErrorCode.ALREADY_EXIST_DATA.getCode())
+                        .message(ErrorCode.ALREADY_EXIST_DATA.getMessage())
+                        .build());
+    }
+
     @ExceptionHandler(SystemException.class)
     public ResponseEntity<ErrorCodeDto> handleSystemException(SystemException e){
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
