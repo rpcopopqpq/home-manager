@@ -1,4 +1,4 @@
-package kr.co.nexsys.mcp.homemanager.home_mms.controller.dto;
+package kr.co.nexsys.mcp.homemanager.home.mms.controller.dto;
 
 
 import lombok.*;
@@ -11,8 +11,8 @@ import javax.validation.constraints.Pattern;
 @AllArgsConstructor
 @NoArgsConstructor
 public class HomeMMSDto {
-    @NotEmpty @Pattern(regexp = "^(urn:mrn:smart:)[a-z]\\w{0,5}:[a-z]\\w{0,5}:[a-z]\\w{0,5}:[a-zA-Z]\\w{0,10}")
+    @NotEmpty @Pattern(regexp = "(urn:mrn:kr:)[a-z]\\w{0,6}:[a-z]\\w{0,10}:.*")
     private String mrn;
-    @NotEmpty
+    @NotEmpty @Pattern(regexp = "(urn:mrn:kr:)[a-z]\\w{0,6}:[a-z]\\w{0,10}:.*")
     private String mrn_mms;
 }

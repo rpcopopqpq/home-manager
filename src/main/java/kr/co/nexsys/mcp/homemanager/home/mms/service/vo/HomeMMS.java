@@ -1,4 +1,4 @@
-package kr.co.nexsys.mcp.homemanager.home_mms.service.vo;
+package kr.co.nexsys.mcp.homemanager.home.mms.service.vo;
 
 
 import lombok.*;

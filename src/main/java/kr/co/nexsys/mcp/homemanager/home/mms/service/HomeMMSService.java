@@ -1,21 +1,19 @@
-package kr.co.nexsys.mcp.homemanager.home_mms.service;
+package kr.co.nexsys.mcp.homemanager.home.mms.service;
 
+import kr.co.nexsys.mcp.homemanager.exception.AlreadyExistException;
 import kr.co.nexsys.mcp.homemanager.exception.NullResultException;
 import kr.co.nexsys.mcp.homemanager.exception.SystemException;
-import kr.co.nexsys.mcp.homemanager.home_mms.dao.HomeMMSDao;
-import kr.co.nexsys.mcp.homemanager.home_mms.dao.dvo.HomeMMSDvo;
-import kr.co.nexsys.mcp.homemanager.home_mms.service.vo.HomeMMS;
+import kr.co.nexsys.mcp.homemanager.home.mms.dao.HomeMMSDao;
+import kr.co.nexsys.mcp.homemanager.home.mms.dao.dvo.HomeMMSDvo;
+import kr.co.nexsys.mcp.homemanager.home.mms.service.vo.HomeMMS;
 import kr.co.nexsys.mcp.homemanager.mms.dao.MMSDao;
 import kr.co.nexsys.mcp.homemanager.mms.dao.dvo.MMSDvo;
 import kr.co.nexsys.mcp.homemanager.mms.service.vo.MMS;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.HibernateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-
-import javax.validation.constraints.Null;
 
 @Slf4j
 @Service
@@ -45,7 +43,17 @@ public class HomeMMSService {
     //homeMMS 생성
     public HomeMMS createHomeMMS(HomeMMS homeMMS){
        try{
-           return HomeMMSService.valueOf(homeMMSDao.saveAndFlush(HomeMMSService.valueOf(homeMMS)));
+           if(homeMMSDao.findOneHomeMMSByMrn(homeMMS.getMrn()) !=null){
+               throw new AlreadyExistException();
+           }else{
+               if(mmsDao.findOneMMSByMrn(homeMMS.getMrn_mms()) ==null){
+                   throw new NullResultException("HM03002N");
+               }else{
+                   return HomeMMSService.valueOf(homeMMSDao.saveAndFlush(HomeMMSService.valueOf(homeMMS)));
+               }
+           }
+       }catch(AlreadyExistException a){
+           throw new AlreadyExistException();
        }catch(NullPointerException n){
            throw new NullResultException("HM03002N");
        }catch(Exception e){
