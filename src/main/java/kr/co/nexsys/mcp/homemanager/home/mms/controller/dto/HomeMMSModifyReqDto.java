@@ -14,5 +14,5 @@ import javax.validation.constraints.Pattern;
 @NoArgsConstructor
 public class HomeMMSModifyReqDto {
     @NotEmpty @Pattern(regexp = "(urn:mrn:kr:)[a-z]\\w{0,6}:[a-z]\\w{0,10}:.*")
-    private String mrn_mms;
+    private String homeMmsMrn;
 }

@@ -71,14 +71,14 @@ public class HomeMMSServiceTest {
                 .build();
         HomeMMS homeMMS = HomeMMS.builder()
                 .mrn("urn:mrn:smart:test:test:test:entity")
-                .mrn_mms("urn:mrn:smart:test:test:test:mmss")
+                .homeMmsMrn("urn:mrn:smart:test:test:test:mmss")
                 .build();
         when(homeMMSDao.saveAndFlush(homeMMSDvo)).thenReturn(homeMMSDvo);
         //when
         HomeMMS result =homeMMSService.createHomeMMS(homeMMS);
         //then
         assertThat(result.getMrn(),equalTo(homeMMSDvo.getMrn()));
-        assertThat(result.getMrn_mms(),equalTo(homeMMSDvo.getMrn_mms()));
+        assertThat(result.getHomeMmsMrn(),equalTo(homeMMSDvo.getMrn_mms()));
     }
 
     //HomeMMS 수정
@@ -91,21 +91,21 @@ public class HomeMMSServiceTest {
                 .mrn_mms("urn:mrn:smart:test:test:test:mmss")
                 .build();
         HomeMMS homeMMSModify = HomeMMS.builder()
-                .mrn_mms("urn:mrn:smart:test:test:test:modified")
+                .homeMmsMrn("urn:mrn:smart:test:test:test:modified")
                 .build();
         MMSDvo mmsDvo = MMSDvo.builder()
                 .ip("127.0.0.1")
                 .mrn("urn:mrn:smart:test:test:test:modified")
                 .port(123)
                 .build();
-        when(mmsDao.findOneMMSByMrn(homeMMSModify.getMrn_mms())).thenReturn(mmsDvo);
+        when(mmsDao.findOneMMSByMrn(homeMMSModify.getHomeMmsMrn())).thenReturn(mmsDvo);
         when(homeMMSDao.findOneHomeMMSByMrn(mrn)).thenReturn(homeMMSDvo);
         homeMMSDvo.setMrn_mms("urn:mrn:smart:test:test:test:modified");
         when(homeMMSDao.saveAndFlush(homeMMSDvo)).thenReturn(homeMMSDvo);
         //when
         HomeMMS result = homeMMSService.modifyHomeMMS(mrn,homeMMSModify);
         //then
-        assertThat(result.getMrn_mms(),equalTo(homeMMSDvo.getMrn_mms()));
+        assertThat(result.getHomeMmsMrn(),equalTo(homeMMSDvo.getMrn_mms()));
     }
 
 }

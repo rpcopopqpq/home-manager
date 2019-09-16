@@ -11,5 +11,5 @@ import lombok.*;
 @Getter
 public class HomeMMS {
     private String mrn;
-    private String mrn_mms;
+    private String homeMmsMrn;
 }

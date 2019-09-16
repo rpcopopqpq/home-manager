@@ -63,18 +63,18 @@ public class HomeMMSController {
     private static HomeMMSDto valueOf(HomeMMS homeMMS){
         return HomeMMSDto.builder()
                     .mrn(homeMMS.getMrn())
-                    .mrn_mms(homeMMS.getMrn_mms())
+                    .homeMmsMrn(homeMMS.getHomeMmsMrn())
                     .build();
     }
     private static HomeMMS valueOf(HomeMMSCreateReqDto homeMMSCreateReqDto){
         return HomeMMS.builder()
                     .mrn(homeMMSCreateReqDto.getMrn())
-                    .mrn_mms(homeMMSCreateReqDto.getMrn_mms())
+                    .homeMmsMrn(homeMMSCreateReqDto.getHomeMmsMrn())
                     .build();
     }
     private static HomeMMS valueOf(HomeMMSModifyReqDto homeMMSModifyReqDto){
         return HomeMMS.builder()
-                .mrn_mms(homeMMSModifyReqDto.getMrn_mms())
+                .homeMmsMrn(homeMMSModifyReqDto.getHomeMmsMrn())
                 .build();
     }
 

@@ -46,7 +46,7 @@ public class HomeMMSService {
            if(homeMMSDao.findOneHomeMMSByMrn(homeMMS.getMrn()) !=null){
                throw new AlreadyExistException();
            }else{
-               if(mmsDao.findOneMMSByMrn(homeMMS.getMrn_mms()) ==null){
+               if(mmsDao.findOneMMSByMrn(homeMMS.getHomeMmsMrn()) ==null){
                    throw new NullResultException("HM03002N");
                }else{
                    return HomeMMSService.valueOf(homeMMSDao.saveAndFlush(HomeMMSService.valueOf(homeMMS)));
@@ -64,13 +64,13 @@ public class HomeMMSService {
     //homeMMS 수정
     public HomeMMS modifyHomeMMS(String mrn, HomeMMS homeMMS){
         try{
-            MMSDvo mmsDvo =mmsDao.findOneMMSByMrn(homeMMS.getMrn_mms());
+            MMSDvo mmsDvo =mmsDao.findOneMMSByMrn(homeMMS.getHomeMmsMrn());
             HomeMMSDvo homeMMSDvo =homeMMSDao.findOneHomeMMSByMrn(mrn);
             //entity mrn이나 mms mrn 중 둘중 하나라도 존재하지 않으면 HM03002N 에러 출력
             if(mmsDvo==null || homeMMSDvo==null){
                 throw new NullResultException("HM03002N");
             }else{
-                homeMMSDvo.setMrn_mms(homeMMS.getMrn_mms());
+                homeMMSDvo.setMrn_mms(homeMMS.getHomeMmsMrn());
                 return HomeMMSService.valueOf(homeMMSDao.saveAndFlush(homeMMSDvo));
             }
         }catch(NullResultException n){
@@ -102,13 +102,13 @@ public class HomeMMSService {
     private static HomeMMSDvo valueOf(HomeMMS homeMMS){
         return HomeMMSDvo.builder()
                 .mrn(homeMMS.getMrn())
-                .mrn_mms(homeMMS.getMrn_mms())
+                .mrn_mms(homeMMS.getHomeMmsMrn())
                 .build();
     }
     private static HomeMMS valueOf(HomeMMSDvo homeMMSDvo){
         return HomeMMS.builder()
                 .mrn(homeMMSDvo.getMrn())
-                .mrn_mms(homeMMSDvo.getMrn_mms())
+                .homeMmsMrn(homeMMSDvo.getMrn_mms())
                 .build();
     }
 

@@ -16,7 +16,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -60,7 +59,7 @@ public class HomeMMSControllerTest {
         //given
         HomeMMS homeMMS = HomeMMS.builder()
                         .mrn("urn:mrn:smart:test:test:test:test")
-                        .mrn_mms("urn:mrn:smart:test:test:test:mmss")
+                        .homeMmsMrn("urn:mrn:smart:test:test:test:mmss")
                         .build();
         given(homeMMSService.createHomeMMS(homeMMS)).willReturn(homeMMS);
         //when
@@ -71,7 +70,7 @@ public class HomeMMSControllerTest {
         //then
         resultActions.andExpect(status().isOk())
                       .andExpect(jsonPath("$.homeMmsDto.mrn",equalTo(homeMMS.getMrn())))
-                      .andExpect(jsonPath("$.homeMmsDto.mrn_mms",equalTo(homeMMS.getMrn_mms())));
+                      .andExpect(jsonPath("$.homeMmsDto.homeMmsMrn",equalTo(homeMMS.getHomeMmsMrn())));
     }
 
     @Test
@@ -80,12 +79,12 @@ public class HomeMMSControllerTest {
         String mrn = "urn:mrn:smart:test:test:test:mmss";
         //데이터 변경 전
         HomeMMS homeMMSModifyReqDto = HomeMMS.builder()
-                .mrn_mms("urn:mrn:smart:test:test:test:Modify")
+                .homeMmsMrn("urn:mrn:smart:test:test:test:Modify")
                 .build();
         //데이터 변경 후
         HomeMMS homeMMSModified = HomeMMS.builder()
                 .mrn("urn:mrn:smart:test:test:test:mmss")
-                .mrn_mms("urn:mrn:smart:test:test:test:Modify")
+                .homeMmsMrn("urn:mrn:smart:test:test:test:Modify")
                 .build();
         given(homeMMSService.modifyHomeMMS(mrn,homeMMSModifyReqDto)).willReturn(homeMMSModified);
         //when
@@ -96,16 +95,16 @@ public class HomeMMSControllerTest {
         //then
         resultActions.andExpect(status().isOk())
                     .andExpect(jsonPath("$.homeMmsDto.mrn",equalTo(homeMMSModified.getMrn())))
-                    .andExpect(jsonPath("$.homeMmsDto.mrn_mms",equalTo(homeMMSModified.getMrn_mms())));
+                    .andExpect(jsonPath("$.homeMmsDto.homeMmsMrn",equalTo(homeMMSModified.getHomeMmsMrn())));
     }
 
     @Test
     public void deletehomeMMS() throws Exception{
         //given
         String mrn = "urn:mrn:smart:test:test:test:mmss";
-        String mrn_mms = "urn:mrn:smart:test:test:test:mmss";
+        String homeMmsMrn = "urn:mrn:smart:test:test:test:mmss";
         //when
-        ResultActions resultActions = mockMvc.perform(delete("/entity/"+mrn+"/home-mms/"+mrn_mms)).andDo(print());
+        ResultActions resultActions = mockMvc.perform(delete("/entity/"+mrn+"/home-mms/"+homeMmsMrn)).andDo(print());
         //then
         resultActions.andExpect(status().isOk());
     }
