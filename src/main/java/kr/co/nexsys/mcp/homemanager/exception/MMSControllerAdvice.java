@@ -34,8 +34,10 @@ public class MMSControllerAdvice {
             String code ="";
             BindingResult bindingResult = e.getBindingResult();
 
-            //valid 에러 발생시키는 어노테이션 찾기, 여러개 일 경우 마지막 에러코드로 보냄
-           //1.필수값 에러 2.패턴 에러 순으로 발생 시 패턴 에러로 메세지 출력
+            /*
+                valid 에러 발생시키는 어노테이션 찾기, 여러개 일 경우 마지막 에러코드로 보냄
+                 1.필수값 에러 2.패턴 에러 순으로 발생 시 패턴 에러로 메세지 출력
+            */
             for(FieldError fieldError : bindingResult.getFieldErrors()){
                 code =fieldError.getCode();
             }
@@ -48,14 +50,6 @@ public class MMSControllerAdvice {
                 case "NotEmpty" :
                     errorCodeDto.setCode(ErrorCode.NOT_FOUND_PARAMETER.getCode());
                     errorCodeDto.setMessage(ErrorCode.NOT_FOUND_PARAMETER.getMessage());
-                    break;
-                case "Max" :
-                    errorCodeDto.setCode(ErrorCode.INVALID_PARAMETER.getCode());
-                    errorCodeDto.setMessage(ErrorCode.INVALID_PARAMETER.getMessage());
-                    break;
-                case "Min" :
-                    errorCodeDto.setCode(ErrorCode.INVALID_PARAMETER.getCode());
-                    errorCodeDto.setMessage(ErrorCode.INVALID_PARAMETER.getMessage());
                     break;
                 default:
                     errorCodeDto.setCode(ErrorCode.INVALID_PARAMETER.getCode());
@@ -70,6 +64,15 @@ public class MMSControllerAdvice {
                 .body(ErrorCodeDto.builder()
                         .code(ErrorCode.ALREADY_EXIST_DATA.getCode())
                         .message(ErrorCode.ALREADY_EXIST_DATA.getMessage())
+                        .build());
+    }
+
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<ErrorCodeDto> handleAuthenticationException(AuthenticationException a){
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(ErrorCodeDto.builder()
+                        .code(ErrorCode.ERROR_AUTH.getCode())
+                        .message(ErrorCode.ERROR_AUTH.getMessage())
                         .build());
     }
 

@@ -51,7 +51,7 @@ public class MMSController {
 
     @PutMapping(value = "/{mrn}")
     public ResponseEntity<MMSModifyResDto> modifyMMS(@PathVariable("mrn") String mrn,
-                                      @RequestBody @Valid MMSModifyReqDto mmsModifyReqDto){
+                                                     @RequestBody @Valid MMSModifyReqDto mmsModifyReqDto){
         log.debug("update Data :" + mmsModifyReqDto +", mrn :" + mrn);
 
         return ResponseEntity.ok(MMSModifyResDto.builder()

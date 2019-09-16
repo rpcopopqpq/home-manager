@@ -25,6 +25,7 @@ public class HomeMMSController {
 
     @GetMapping("/{mrn}/home-mms")
     public ResponseEntity<HomeMMSFindResDto> findHomeMMS(@PathVariable("mrn") String mrn){
+
         return ResponseEntity.ok(HomeMMSFindResDto.builder()
                                     .mrn(mrn)
                                     .homeMmsDto(HomeMMSController.valueOf(homeMMSService.findHomeMMS(mrn)))
@@ -33,6 +34,7 @@ public class HomeMMSController {
 
     @PostMapping("/home-mms")
     public ResponseEntity<HomeMMSCreateResDto> createHomeMMS(@RequestBody @Valid HomeMMSCreateReqDto homeMMSCreateReqDto){
+
         return ResponseEntity.ok(HomeMMSCreateResDto.builder()
                                     .homeMmsDto(HomeMMSController.valueOf(homeMMSService.createHomeMMS(HomeMMSController.valueOf(homeMMSCreateReqDto))))
                                     .build());
@@ -40,7 +42,8 @@ public class HomeMMSController {
 
     @PutMapping("/{mrn}/home-mms")
     public ResponseEntity<HomeMMSModifyResDto> modifyHomeMMS(@PathVariable("mrn") String mrn,
-                                                       @RequestBody @Valid HomeMMSModifyReqDto homeMMSModifyReqDto){
+                                                             @RequestBody @Valid HomeMMSModifyReqDto homeMMSModifyReqDto){
+
         return ResponseEntity.ok(HomeMMSModifyResDto.builder()
                                     .homeMmsDto(HomeMMSController.valueOf(homeMMSService.modifyHomeMMS(mrn,HomeMMSController.valueOf(homeMMSModifyReqDto))))
                                     .build());
@@ -48,6 +51,7 @@ public class HomeMMSController {
 
     @DeleteMapping("/{mrn}/home-mms")
     public ResponseEntity<?> deleteHomeMMS(@PathVariable("mrn") String mrn){
+
         homeMMSService.deleteHomeMMS(mrn);
         return ResponseEntity.ok("DELETE OK");
     }
