@@ -40,8 +40,7 @@ public class HomeMMSControllerTest {
         String mrn = "urn:mrn:smart:test:test:test:test";
           MMS mms = MMS.builder()
                                 .mrn("urn:mrn:smart:test:test:test:test")
-                                .ip("127.0.0.1")
-                                .port(123)
+                                .url("http://www.test.com")
                                 .build();
         given(homeMMSService.findHomeMMS(mrn)).willReturn(mms);
         //when
@@ -50,8 +49,7 @@ public class HomeMMSControllerTest {
         resultActions.andExpect(status().isOk())
                      .andExpect(jsonPath("$.mrn",equalTo(mrn)))
                      .andExpect(jsonPath("$.homeMmsDto.mrn",equalTo(mms.getMrn())))
-                     .andExpect(jsonPath("$.homeMmsDto.ip",equalTo(mms.getIp())))
-                     .andExpect(jsonPath("$.homeMmsDto.port",equalTo(mms.getPort())));
+                     .andExpect(jsonPath("$.homeMmsDto.url",equalTo(mms.getUrl())));
     }
 
     @Test

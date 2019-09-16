@@ -68,8 +68,7 @@ public class MMSService {
             }else {
                 MMS result = MMSService.valueOf(mmsDao.saveAndFlush(MMSService.valueOf(mms)));
                 return MMS.builder().mrn(result.getMrn())
-                        .ip(result.getIp())
-                        .port(result.getPort()).build();
+                        .url(result.getUrl()).build();
             }
         }catch(AlreadyExistException a){
             throw new AlreadyExistException();
@@ -84,8 +83,7 @@ public class MMSService {
             //mrn에 해당하는 mms 조회
             MMS result = MMSService.valueOf(mmsDao.findOneMMSByMrn(mrn));
 
-            result.setIp(mms.getIp());
-            result.setPort(mms.getPort());
+            result.setUrl(mms.getUrl());
             return MMSService.valueOf(mmsDao.saveAndFlush(MMSService.valueOf(result)));
         }catch(NullPointerException n) {
             throw new NullResultException("HM03001N");
@@ -111,16 +109,14 @@ public class MMSService {
     private static MMS valueOf(MMSDvo mmsDvo){
         return MMS.builder()
                 .mrn(mmsDvo.getMrn())
-                .ip(mmsDvo.getIp())
-                .port(mmsDvo.getPort())
+                .url(mmsDvo.getUrl())
                 .build();
     }
 
     private static MMSDvo valueOf(MMS mms){
         return MMSDvo.builder()
                 .mrn(mms.getMrn())
-                .ip(mms.getIp())
-                .port(mms.getPort())
+                .url(mms.getUrl())
                 .build();
     }
 }

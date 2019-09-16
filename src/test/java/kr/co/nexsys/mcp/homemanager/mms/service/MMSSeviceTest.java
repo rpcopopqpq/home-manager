@@ -38,9 +38,8 @@ public class MMSSeviceTest {
     public void shouldFindAllMMSs(){
         //given
         MMSDvo mmsDvo = MMSDvo.builder()
-                              .ip("127.0.0.1")
                               .mrn("urn:mrn:smart:test:test:test:test")
-                              .port(123)
+                              .url("http://www.test.com")
                               .createDate(LocalDateTime.now())
                               .build();
         when(mmsDao.findAll()).thenReturn(Lists.list(mmsDvo));
@@ -48,8 +47,7 @@ public class MMSSeviceTest {
         List<MMS> list = mmsService.findAllMMSs();
         //then
         assertThat(list.get(0).getMrn(), equalTo(mmsDvo.getMrn()));
-        assertThat(list.get(0).getIp(), equalTo(mmsDvo.getIp()));
-        assertThat(list.get(0).getPort(), equalTo(mmsDvo.getPort()));
+        assertThat(list.get(0).getUrl(), equalTo(mmsDvo.getUrl()));
     }
 
     //MMS조회
@@ -57,9 +55,8 @@ public class MMSSeviceTest {
     public void shouldFindOneMMSByMrn(){
         //given
         MMSDvo mmsDvo = MMSDvo.builder()
-                              .ip("127.0.0.1")
                               .mrn("urn:mrn:smart:test:test:test:test")
-                              .port(123)
+                              .url("http://www.test.com")
                               .createDate(LocalDateTime.now())
                               .build();
         when(mmsDao.findOneMMSByMrn(mmsDvo.getMrn())).thenReturn(mmsDvo);
@@ -67,8 +64,7 @@ public class MMSSeviceTest {
         MMS mms = mmsService.findMMSByMrn(mmsDvo.getMrn());
         //then
         assertThat(mms.getMrn(), equalTo(mmsDvo.getMrn()));
-        assertThat(mms.getIp(), equalTo(mmsDvo.getIp()));
-        assertThat(mms.getPort(), equalTo(mmsDvo.getPort()));
+        assertThat(mms.getUrl(), equalTo(mmsDvo.getUrl()));
     }
 
     //MMS생성
@@ -76,14 +72,12 @@ public class MMSSeviceTest {
     public void shouldCreateMMS(){
         //given
         MMSDvo mmsDvo = MMSDvo.builder()
-                .ip("127.0.0.1")
                 .mrn("urn:mrn:smart:test:test:test:test2")
-                .port(123)
+                .url("http://www.test.com")
                 .build();
         MMS mms = MMS.builder()
-                .ip("127.0.0.1")
                 .mrn("urn:mrn:smart:test:test:test:test2")
-                .port(123)
+                .url("http://www.test.com")
                 .build();
 
         when(mmsDao.saveAndFlush(mmsDvo)).thenReturn(mmsDvo);
@@ -91,8 +85,7 @@ public class MMSSeviceTest {
         MMS result = mmsService.createMMS(mms);
         //then
         assertThat(result.getMrn(), equalTo(mmsDvo.getMrn()));
-        assertThat(result.getIp(), equalTo(mmsDvo.getIp()));
-        assertThat(result.getPort(), equalTo(mmsDvo.getPort()));
+        assertThat(result.getUrl(), equalTo(mmsDvo.getUrl()));
     }
 
     //MMS 수정
@@ -100,25 +93,21 @@ public class MMSSeviceTest {
     public void shouldModifyMMS(){
         //given
         MMSDvo mmsDvo = MMSDvo.builder()
-                .ip("192.168.56.100")
                 .mrn("urn:mrn:smart:test:test:test:test2")
-                .port(100)
+                .url("http://www.test.com")
                 .build();
         MMS mms = MMS.builder()
-                .ip("127.0.0.1")
                 .mrn("urn:mrn:smart:test:test:test:test2")
-                .port(123)
+                .url("http://www.test.com")
                 .build();
 
         when(mmsDao.saveAndFlush(mmsDvo)).thenReturn(mmsDvo);
         when(mmsDao.findOneMMSByMrn(mms.getMrn())).thenReturn(mmsDvo);
         //when
-        mms.setIp("192.168.56.100");
-        mms.setPort(100);
+        mms.setUrl("http://www.test222222.com");
         MMS result = mmsService.modifyMMS(mms.getMrn(),mms);
         //then
         assertThat(result.getMrn(), equalTo(mmsDvo.getMrn()));
-        assertThat(result.getIp(), equalTo(mmsDvo.getIp()));
-        assertThat(result.getPort(), equalTo(mmsDvo.getPort()));
+        assertThat(result.getUrl(), equalTo(mmsDvo.getUrl()));
     }
 }

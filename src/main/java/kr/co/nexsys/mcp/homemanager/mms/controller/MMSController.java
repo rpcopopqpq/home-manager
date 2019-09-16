@@ -72,23 +72,20 @@ public class MMSController {
     private static MMS valueOf(MMSCreateReqDto mmsCreateReqDto){
         return MMS.builder()
                 .mrn(mmsCreateReqDto.getMrn())
-                .ip(mmsCreateReqDto.getIp())
-                .port(mmsCreateReqDto.getPort())
+                .url(mmsCreateReqDto.getUrl())
                 .build();
     }
 
     private static MMS valueOf(MMSModifyReqDto mmsModifyReqDto){
         return MMS.builder()
-                .ip(mmsModifyReqDto.getIp())
-                .port(mmsModifyReqDto.getPort())
+                .url(mmsModifyReqDto.getUrl())
                 .build();
     }
 
     private static MMSDto valueOf(MMS mms){
         return MMSDto.builder()
                 .mrn(mms.getMrn())
-                .ip(mms.getIp())
-                .port(mms.getPort())
+                .url(mms.getUrl())
                 .build();
     }
 

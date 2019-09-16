@@ -37,8 +37,7 @@ public class HomeMMSDaoTest {
                                     .build();
         MMSDvo mmsDvo = MMSDvo.builder()
                             .mrn("urn:mrn:smart:test:test:test:mmss")
-                            .ip("127.0.0.1")
-                            .port(123)
+                            .url("http://www.test.com")
                             .build();
         MMSDvo mmsGigven = mmsDao.saveAndFlush(mmsDvo);
         HomeMMSDvo given = homeMMSDao.saveAndFlush(homeMMSDvo);
@@ -59,8 +58,7 @@ public class HomeMMSDaoTest {
                 .build();
         MMSDvo mmsDvo = MMSDvo.builder()
                 .mrn("urn:mrn:smart:test:test:test:mmss")
-                .ip("127.0.0.1")
-                .port(123)
+                .url("http://www.test.com")
                 .build();
         MMSDvo mmsGigven = mmsDao.saveAndFlush(mmsDvo);
         //when
@@ -80,13 +78,11 @@ public class HomeMMSDaoTest {
                 .build();
         MMSDvo mmsDvo = MMSDvo.builder()
                 .mrn("urn:mrn:smart:test:test:test:mmss")
-                .ip("127.0.0.1")
-                .port(123)
+                .url("http://www.test.com")
                 .build();
         MMSDvo mmsDvoModified = MMSDvo.builder()
                 .mrn("urn:mrn:smart:test:test:test:modified")
-                .ip("127.0.0.1")
-                .port(123)
+                .url("http://www.test22222222222.com")
                 .build();
         mmsDao.saveAndFlush(mmsDvo);
         MMSDvo mmsGigven = mmsDao.saveAndFlush(mmsDvoModified);
@@ -109,8 +105,7 @@ public class HomeMMSDaoTest {
                 .build();
         MMSDvo mmsDvo = MMSDvo.builder()
                 .mrn("urn:mrn:smart:test:test:test:mmss")
-                .ip("127.0.0.1")
-                .port(123)
+                .url("http://www.test.com")
                 .build();
         mmsDao.saveAndFlush(mmsDvo);
         HomeMMSDvo given = homeMMSDao.saveAndFlush(homeMMSDvo);

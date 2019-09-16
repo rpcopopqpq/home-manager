@@ -55,8 +55,7 @@ public class HomeMMSController {
     private static MMSDto valueOf(MMS mms){
         return MMSDto.builder()
                 .mrn(mms.getMrn())
-                .ip(mms.getIp())
-                .port(mms.getPort())
+                .url(mms.getUrl())
                 .build();
     }
 

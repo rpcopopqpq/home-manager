@@ -45,8 +45,7 @@ public class MMSControllerTest {
         //given
         MMS mms = MMS.builder()
                 .mrn("urn:home:mms:test:test-0.0.1v")
-                .ip("127.0.0.1")
-                .port(1101)
+                .url("http://www.test.com")
                 .build();
         given(mmsService.findAllMMSs()).willReturn(Lists.list(mms));
         //when
@@ -54,8 +53,7 @@ public class MMSControllerTest {
         //then
         resultActions.andExpect(status().isOk())
                      .andExpect(jsonPath("$.mmslist.[0].mrn", equalTo(mms.getMrn())))
-                     .andExpect(jsonPath("$.mmslist.[0].ip", equalTo(mms.getIp())))
-                     .andExpect(jsonPath("$.mmslist.[0].port", equalTo(mms.getPort())));
+                     .andExpect(jsonPath("$.mmslist.[0].ip", equalTo(mms.getUrl())));
     }
 
     //MRN으로부터 MMS 조회
@@ -65,8 +63,7 @@ public class MMSControllerTest {
         String mrn = "urn:home:mms:test:test:test:test";
         MMS mms = MMS.builder()
                 .mrn(mrn)
-                .ip("127.0.0.1")
-                .port(1101)
+                .url("http://www.test.com")
                 .build();
         given(mmsService.findMMSByMrn(mrn)).willReturn(mms);
         //when
@@ -76,8 +73,7 @@ public class MMSControllerTest {
         //then
         resultActions.andExpect(status().isOk())
                      .andExpect(jsonPath("$.mmsDto.mrn", equalTo(mms.getMrn())))
-                     .andExpect(jsonPath("$.mmsDto.ip", equalTo(mms.getIp())))
-                     .andExpect(jsonPath("$.mmsDto.port", equalTo(mms.getPort())));
+                     .andExpect(jsonPath("$.mmsDto.ip", equalTo(mms.getUrl())));
     }
 
     //MMS 생성
@@ -86,8 +82,7 @@ public class MMSControllerTest {
         //given
         MMS mms = MMS.builder()
                 .mrn("urn:mrn:smart:test:test:test:test")
-                .ip("127.0.0.1")
-                .port(1101)
+                .url("http://www.test.com")
                 .build();
         given(mmsService.createMMS(mms)).willReturn(mms);
         //when
@@ -98,8 +93,7 @@ public class MMSControllerTest {
         //then
         resultActions.andExpect(status().isOk())
                      .andExpect(jsonPath("$.mmsDto.mrn", equalTo(mms.getMrn())))
-                     .andExpect(jsonPath("$.mmsDto.ip", equalTo(mms.getIp())))
-                     .andExpect(jsonPath("$.mmsDto.port", equalTo(mms.getPort())));
+                     .andExpect(jsonPath("$.mmsDto.ip", equalTo(mms.getUrl())));
 
     }
 
@@ -109,8 +103,7 @@ public class MMSControllerTest {
         //given
         String mrn = "urn:home:mms:test:test-0.0.2v";
         MMS mms = MMS.builder()
-                .ip("127.0.0.3")
-                .port(11)
+                .url("http://www.test.com")
                 .build();
         //when
         ResultActions resultActions = mockMvc.perform(put("/mms/"+mrn)
@@ -120,8 +113,7 @@ public class MMSControllerTest {
         //then
         resultActions.andExpect(status().isOk())
                     .andExpect(jsonPath("$.mmsDto.mrn", equalTo(mms.getMrn())))
-                    .andExpect(jsonPath("$.mmsDto.ip", equalTo(mms.getIp())))
-                    .andExpect(jsonPath("$.mmsDto.port", equalTo(mms.getPort())));
+                    .andExpect(jsonPath("$.mmsDto.ip", equalTo(mms.getUrl())));
     }
 
     //삭제

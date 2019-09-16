@@ -19,8 +19,7 @@ import java.time.LocalDateTime;
 public class MMSDvo {
     @Id
     private String mrn;
-    private String ip;
-    private Integer port;
+    private String url;
 
     @Column(name = "create_date",updatable = false)
     @CreationTimestamp

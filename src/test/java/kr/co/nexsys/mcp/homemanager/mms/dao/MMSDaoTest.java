@@ -31,17 +31,15 @@ public class MMSDaoTest {
     public void shouldfindAll(){
         //given
         MMSDvo mmsDvo = MMSDvo.builder()
-                .ip("127.0.0.1")
                 .mrn("urn:mrn:smart:test:test:test:test2")
-                .port(123)
+                .url("http://www.test.com")
                 .build();
         List<MMSDvo> given = mmsDao.saveAll(Lists.list(mmsDvo));
         //when
         List<MMSDvo> result = mmsDao.findAll();
         //then
         assertThat(result.get(0).getMrn(),equalTo(given.get(0).getMrn()));
-        assertThat(result.get(0).getIp(),equalTo(given.get(0).getIp()));
-        assertThat(result.get(0).getPort(),equalTo(given.get(0).getPort()));
+        assertThat(result.get(0).getUrl(),equalTo(given.get(0).getUrl()));
     }
 
     //MMS 조회
@@ -49,17 +47,15 @@ public class MMSDaoTest {
     public void findOneMMSBymrn(){
         //given
         MMSDvo mmsDvo = MMSDvo.builder()
-                .ip("127.0.0.1")
                 .mrn("urn:mrn:smart:test:test:test:test2")
-                .port(123)
+                .url("http://www.test.com")
                 .build();
         MMSDvo given = mmsDao.saveAndFlush(mmsDvo);
         //when
         MMSDvo result = mmsDao.findOneMMSByMrn(mmsDvo.getMrn());
         //then
         assertThat(result.getMrn(),equalTo(given.getMrn()));
-        assertThat(result.getIp(),equalTo(given.getIp()));
-        assertThat(result.getPort(),equalTo(given.getPort()));
+        assertThat(result.getUrl(),equalTo(given.getUrl()));
     }
 
     //MMS 생성
@@ -67,16 +63,14 @@ public class MMSDaoTest {
     public void shouldSave(){
         //given
         MMSDvo mmsDvo = MMSDvo.builder()
-                .ip("127.0.0.1")
                 .mrn("urn:mrn:smart:test:test:test:test2")
-                .port(123)
+                .url("http://www.test.com")
                 .build();
         //when
         MMSDvo result = mmsDao.saveAndFlush(mmsDvo);
         //then
         assertThat(result.getMrn(), notNullValue());
-        assertThat(result.getIp(), notNullValue());
-        assertThat(result.getPort(), notNullValue());
+        assertThat(result.getUrl(), notNullValue());
     }
 
     //MMS 수정
@@ -84,18 +78,15 @@ public class MMSDaoTest {
     public void shouldModify(){
         //given
         MMSDvo mmsDvo = MMSDvo.builder()
-                .ip("127.0.0.1")
                 .mrn("urn:mrn:smart:test:test:test:test2")
-                .port(123)
+                .url("http://www.test.com")
                 .build();
         MMSDvo given = mmsDao.saveAndFlush(mmsDvo);
         //when
-        mmsDvo.setIp("192.168.56.100");
-        mmsDvo.setPort(100);
+        mmsDvo.setUrl("http://www.test2222222.com");
         MMSDvo result = mmsDao.saveAndFlush(mmsDvo);
         //then
-        assertNotEquals(result.getIp(),given.getIp());
-        assertNotEquals(result.getPort(),given.getPort());
+        assertNotEquals(result.getUrl(),given.getUrl());
     }
 
     //MMS 삭제
@@ -103,9 +94,8 @@ public class MMSDaoTest {
     public void shouldDelete(){
         //given
         MMSDvo mmsDvo = MMSDvo.builder()
-                .ip("127.0.0.1")
                 .mrn("urn:mrn:smart:test:test:test:test2")
-                .port(123)
+                .url("http://www.test.com")
                 .build();
         mmsDao.saveAndFlush(mmsDvo);
         //when

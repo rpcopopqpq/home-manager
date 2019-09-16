@@ -95,8 +95,7 @@ public class HomeMMSService {
     private static MMS valueOf(MMSDvo mmsDvo){
         return MMS.builder()
                 .mrn(mmsDvo.getMrn())
-                .ip(mmsDvo.getIp())
-                .port(mmsDvo.getPort())
+                .url(mmsDvo.getUrl())
                 .build();
     }
     private static HomeMMSDvo valueOf(HomeMMS homeMMS){

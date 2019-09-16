@@ -12,8 +12,6 @@ import javax.validation.constraints.*;
 @AllArgsConstructor
 @Getter
 public class MMSModifyReqDto {
-    @NotEmpty @Pattern(regexp = "^[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}$")
-    private String ip;
-    @NotNull @Min(0) @Max(65535)
-    private Integer port;
+    @NotEmpty
+    private String url;
 }

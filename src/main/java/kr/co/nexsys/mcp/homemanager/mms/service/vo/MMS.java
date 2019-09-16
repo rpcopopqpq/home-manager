@@ -14,6 +14,5 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class MMS {
     private String mrn;
-    private String ip;
-    private Integer port;
+    private String url;
 }

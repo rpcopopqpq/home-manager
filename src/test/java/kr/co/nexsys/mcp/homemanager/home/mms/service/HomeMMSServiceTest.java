@@ -48,8 +48,7 @@ public class HomeMMSServiceTest {
                                 .build();
         MMSDvo mmsDvo = MMSDvo.builder()
                                 .mrn("urn:mrn:smart:test:test:test:mmss")
-                                .ip("127.0.0.1")
-                                .port(123)
+                                .url("http://www.test.com")
                                 .build();
         when(homeMMSDao.findOneHomeMMSByMrn(mrn)).thenReturn(homeMMSDvo);
         when(mmsDao.findOneMMSByMrn(homeMMSDvo.getMrn_mms())).thenReturn(mmsDvo);
@@ -57,8 +56,7 @@ public class HomeMMSServiceTest {
         MMS mms = homeMMSService.findHomeMMS(homeMMSDvo.getMrn());
         //then
         assertThat(mms.getMrn(), equalTo(mmsDvo.getMrn()));
-        assertThat(mms.getIp(), equalTo(mmsDvo.getIp()));
-        assertThat(mms.getPort(), equalTo(mmsDvo.getPort()));
+        assertThat(mms.getUrl(), equalTo(mmsDvo.getUrl()));
     }
 
     //HomeMMS 생성
@@ -94,9 +92,8 @@ public class HomeMMSServiceTest {
                 .homeMmsMrn("urn:mrn:smart:test:test:test:modified")
                 .build();
         MMSDvo mmsDvo = MMSDvo.builder()
-                .ip("127.0.0.1")
                 .mrn("urn:mrn:smart:test:test:test:modified")
-                .port(123)
+                .url("http://www.test.com")
                 .build();
         when(mmsDao.findOneMMSByMrn(homeMMSModify.getHomeMmsMrn())).thenReturn(mmsDvo);
         when(homeMMSDao.findOneHomeMMSByMrn(mrn)).thenReturn(homeMMSDvo);
