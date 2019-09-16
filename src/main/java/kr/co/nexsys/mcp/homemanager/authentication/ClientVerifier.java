@@ -1,13 +1,12 @@
 package kr.co.nexsys.mcp.homemanager.authentication;
 
-import lombok.AllArgsConstructor;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import net.etri.pkilib.server.ServerPKILibrary;
 import net.etri.pkilib.tool.ByteConverter;
 import org.springframework.stereotype.Component;
 
-@AllArgsConstructor
 @NoArgsConstructor
 @Data
 @Component
