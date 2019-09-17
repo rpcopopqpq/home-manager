@@ -46,7 +46,7 @@ public class SwaggerConfig {
 
     /* 방법 2 : ApiKey 클래스를 이용하여 Swagger 오른쪽 상단에 Authorization 관련 Header 추가 (한번 적용시 유지되므로 테스트 환경 좋음)*/
     private ApiKey apiKey() {
-        return new ApiKey("srcMRN + accessToken", "Authorization", "header");
+        return new ApiKey("srcMRN + accessToken", "srcMRN", "header");
     }
 
 }
