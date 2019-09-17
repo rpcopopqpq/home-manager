@@ -24,7 +24,8 @@ public class CertificationConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
 
         registry.addInterceptor(handlerInterceptor)
-                .addPathPatterns("/*");
+                .addPathPatterns("/entity/**")
+                .addPathPatterns("/mms/**");
         WebMvcConfigurer.super.addInterceptors(registry);
     }
 
