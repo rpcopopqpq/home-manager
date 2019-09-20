@@ -8,5 +8,6 @@ import lombok.Getter;
 @Getter
 public class HomeMMSFindResDto {
     private String mrn;
+    private String type;
     private MMSDto homeMmsDto;
 }

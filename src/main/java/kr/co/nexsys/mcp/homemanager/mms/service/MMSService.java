@@ -4,6 +4,7 @@ package kr.co.nexsys.mcp.homemanager.mms.service;
 
 import kr.co.nexsys.mcp.homemanager.exception.AlreadyExistException;
 import kr.co.nexsys.mcp.homemanager.exception.NullResultException;
+import kr.co.nexsys.mcp.homemanager.exception.PermissionException;
 import kr.co.nexsys.mcp.homemanager.exception.SystemException;
 import kr.co.nexsys.mcp.homemanager.mms.dao.MMSDao;
 import kr.co.nexsys.mcp.homemanager.mms.dao.dvo.MMSDvo;
@@ -78,28 +79,40 @@ public class MMSService {
     }
 
     //MMS 수정
-    public MMS modifyMMS(String mrn, MMS mms) {
+    public MMS modifyMMS(String MMSMrn, String mrn, MMS mms) {
         try {
-            //mrn에 해당하는 mms 조회
-            MMS result = MMSService.valueOf(mmsDao.findOneMMSByMrn(mrn));
+            if (MMSMrn.equals(mrn)) {
+                //mrn에 해당하는 mms 조회
+                MMS result = MMSService.valueOf(mmsDao.findOneMMSByMrn(mrn));
 
-            result.setUrl(mms.getUrl());
-            return MMSService.valueOf(mmsDao.saveAndFlush(MMSService.valueOf(result)));
+                result.setUrl(mms.getUrl());
+                return MMSService.valueOf(mmsDao.saveAndFlush(MMSService.valueOf(result)));
+            } else {
+                throw new PermissionException();
+            }
+        }catch(PermissionException p){
+            throw new PermissionException();
         }catch(NullPointerException n) {
-            throw new NullResultException("HM03001N");
+            throw new NullResultException("HM03002N");
         }catch(Exception e){
             throw new SystemException();
         }
     }
 
     //MMS 삭제
-    public void removeMMS(String mrn) {
+    public void removeMMS(String MMSMrn,String mrn) {
         try {
-            //mrn에 해당하는 mms 조회
-            MMS result = MMSService.valueOf(mmsDao.findOneMMSByMrn(mrn));
-            mmsDao.delete(MMSService.valueOf(result));
+            if (MMSMrn.equals(mrn)) {
+                //mrn에 해당하는 mms 조회
+                MMS result = MMSService.valueOf(mmsDao.findOneMMSByMrn(mrn));
+                mmsDao.delete(MMSService.valueOf(result));
+            } else {
+                throw new PermissionException();
+            }
+        }catch(PermissionException p){
+            throw new PermissionException();
         }catch(NullPointerException n) {
-            throw new NullResultException("HM03001N");
+            throw new NullResultException("HM03002N");
         }catch(Exception e){
             throw new SystemException();
         }

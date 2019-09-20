@@ -12,6 +12,5 @@ import javax.validation.constraints.*;
 @AllArgsConstructor
 @Getter
 public class MMSModifyReqDto {
-    @NotEmpty
-    private String url;
+    private String certificate;
 }

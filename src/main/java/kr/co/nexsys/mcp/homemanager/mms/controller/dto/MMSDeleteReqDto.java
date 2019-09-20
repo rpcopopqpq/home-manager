@@ -5,12 +5,10 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.*;
-
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-public class MMSCreateReqDto {
+public class MMSDeleteReqDto {
     private String certificate;
 }

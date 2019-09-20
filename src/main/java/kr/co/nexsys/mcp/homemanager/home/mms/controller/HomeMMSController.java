@@ -1,6 +1,8 @@
 package kr.co.nexsys.mcp.homemanager.home.mms.controller;
 
 
+import kr.co.nexsys.mcp.homemanager.authentication.ClientVerifier;
+import kr.co.nexsys.mcp.homemanager.exception.AuthenticationException;
 import kr.co.nexsys.mcp.homemanager.home.mms.controller.dto.*;
 import kr.co.nexsys.mcp.homemanager.home.mms.service.HomeMMSService;
 import kr.co.nexsys.mcp.homemanager.home.mms.service.vo.HomeMMS;
@@ -21,7 +23,8 @@ public class HomeMMSController {
     @Autowired
     private HomeMMSService homeMMSService;
 
-    public HomeMMSController(HomeMMSService homeMMSService){this.homeMMSService=homeMMSService;}
+    @Autowired
+    private ClientVerifier clientVerifier;
 
     @GetMapping("/{mrn}/home-mms")
     public ResponseEntity<HomeMMSFindResDto> findHomeMMS(@PathVariable("mrn") String mrn){
@@ -33,27 +36,40 @@ public class HomeMMSController {
     }
 
     @PostMapping("/home-mms")
-    public ResponseEntity<HomeMMSCreateResDto> createHomeMMS(@RequestBody @Valid HomeMMSCreateReqDto homeMMSCreateReqDto){
+    public ResponseEntity<HomeMMSCreateResDto> createHomeMMS(@RequestHeader(value = "MMS-MRN") String MmsMrn,
+                                                             @RequestBody @Valid HomeMMSCreateReqDto homeMMSCreateReqDto){
 
-        return ResponseEntity.ok(HomeMMSCreateResDto.builder()
-                                    .homeMmsDto(HomeMMSController.valueOf(homeMMSService.createHomeMMS(HomeMMSController.valueOf(homeMMSCreateReqDto))))
-                                    .build());
+        if(clientVerifier.verifyClient(MmsMrn,homeMMSCreateReqDto.getCertificate())) {
+
+            return ResponseEntity.ok(HomeMMSCreateResDto.builder()
+                    .homeMmsDto(HomeMMSController.valueOf(homeMMSService.createHomeMMS(HomeMMSController.valueOf(MmsMrn,homeMMSCreateReqDto))))
+                    .build());
+        }else {
+            throw new AuthenticationException();
+        }
     }
 
-    @PutMapping("/{mrn}/home-mms")
+   /* @PutMapping("/{mrn}/home-mms")
     public ResponseEntity<HomeMMSModifyResDto> modifyHomeMMS(@PathVariable("mrn") String mrn,
                                                              @RequestBody @Valid HomeMMSModifyReqDto homeMMSModifyReqDto){
 
         return ResponseEntity.ok(HomeMMSModifyResDto.builder()
                                     .homeMmsDto(HomeMMSController.valueOf(homeMMSService.modifyHomeMMS(mrn,HomeMMSController.valueOf(homeMMSModifyReqDto))))
                                     .build());
-    }
+    }*/
 
     @DeleteMapping("/{mrn}/home-mms")
-    public ResponseEntity<?> deleteHomeMMS(@PathVariable("mrn") String mrn){
+    public ResponseEntity<?> deleteHomeMMS(@PathVariable("mrn") String mrn,
+                                           @RequestHeader(value = "MMS-MRN") String MmsMrn,
+                                           @RequestBody HomeMMSDeleteReqDto homeMMSDeleteReqDto){
 
-        homeMMSService.deleteHomeMMS(mrn);
-        return ResponseEntity.ok("DELETE OK");
+        if(clientVerifier.verifyClient(MmsMrn,homeMMSDeleteReqDto.getCertificate())){
+            homeMMSService.deleteHomeMMS(mrn,MmsMrn);
+            return ResponseEntity.ok("DELETE OK");
+        }else{
+            throw new AuthenticationException();
+        }
+
     }
 
     private static MMSDto valueOf(MMS mms){
@@ -69,10 +85,11 @@ public class HomeMMSController {
                     .homeMmsMrn(homeMMS.getHomeMmsMrn())
                     .build();
     }
-    private static HomeMMS valueOf(HomeMMSCreateReqDto homeMMSCreateReqDto){
+    private static HomeMMS valueOf(String MmsMrn, HomeMMSCreateReqDto homeMMSCreateReqDto){
         return HomeMMS.builder()
                     .mrn(homeMMSCreateReqDto.getMrn())
-                    .homeMmsMrn(homeMMSCreateReqDto.getHomeMmsMrn())
+                    .homeMmsMrn(MmsMrn)
+                    .type(homeMMSCreateReqDto.getType())
                     .build();
     }
     private static HomeMMS valueOf(HomeMMSModifyReqDto homeMMSModifyReqDto){

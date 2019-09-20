@@ -12,4 +12,5 @@ import lombok.*;
 public class HomeMMS {
     private String mrn;
     private String homeMmsMrn;
+    private String type;
 }

@@ -1,5 +1,7 @@
 package kr.co.nexsys.mcp.homemanager.mms.controller;
 
+import kr.co.nexsys.mcp.homemanager.authentication.ClientVerifier;
+import kr.co.nexsys.mcp.homemanager.exception.AuthenticationException;
 import kr.co.nexsys.mcp.homemanager.mms.controller.dto.*;
 import kr.co.nexsys.mcp.homemanager.mms.service.MMSService;
 import kr.co.nexsys.mcp.homemanager.mms.service.vo.MMS;
@@ -8,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -16,10 +17,11 @@ import java.util.stream.Collectors;
 @RequestMapping("/mms")
 public class MMSController {
 
+    @Autowired
     private MMSService mmsService;
 
     @Autowired
-    private MMSController(MMSService mmsService ) {this.mmsService = mmsService;}
+    private ClientVerifier clientVerifier;
 
     @GetMapping
     public ResponseEntity<MMSFindAllResDto> findAllMMSs(){
@@ -41,44 +43,61 @@ public class MMSController {
     }
 
     @PostMapping
-    public ResponseEntity<MMSCreateResDto> createMMS(@RequestBody @Valid MMSCreateReqDto mmsCreateReqDto){
+    public ResponseEntity<MMSCreateResDto> createMMS(@RequestHeader(value = "MMS-MRN") String MMSMrn,
+                                                     @RequestBody MMSCreateReqDto mmsCreateReqDto){
         log.debug("insert Data :" + mmsCreateReqDto.toString());
 
-        return ResponseEntity.ok(MMSCreateResDto.builder()
-                                    .mmsDto(MMSController.valueOf(mmsService.createMMS(MMSController.valueOf(mmsCreateReqDto))))
-                                    .build());
+        if(clientVerifier.verifyClient(MMSMrn,mmsCreateReqDto.getCertificate())){
+            String url = clientVerifier.getAutenticationUrl(MMSMrn,mmsCreateReqDto.getCertificate());
+            return ResponseEntity.ok(MMSCreateResDto.builder()
+                    .mmsDto(MMSController.valueOf(mmsService.createMMS(MMSController.valueOf(MMSMrn,url))))
+                    .build());
+        }else{
+            throw new AuthenticationException();
+        }
     }
 
     @PutMapping(value = "/{mrn}")
     public ResponseEntity<MMSModifyResDto> modifyMMS(@PathVariable("mrn") String mrn,
-                                                     @RequestBody @Valid MMSModifyReqDto mmsModifyReqDto){
+                                                     @RequestHeader(value = "MMS-MRN") String MMSMrn,
+                                                     @RequestBody MMSModifyReqDto mmsModifyReqDto){
         log.debug("update Data :" + mmsModifyReqDto +", mrn :" + mrn);
 
-        return ResponseEntity.ok(MMSModifyResDto.builder()
-                                    .mmsDto(MMSController.valueOf(mmsService.modifyMMS(mrn,MMSController.valueOf(mmsModifyReqDto))))
-                                    .build());
 
+        if(clientVerifier.verifyClient(MMSMrn,mmsModifyReqDto.getCertificate())){ //2
+            String url = clientVerifier.getAutenticationUrl(MMSMrn,mmsModifyReqDto.getCertificate());
+            return ResponseEntity.ok(MMSModifyResDto.builder()
+                        .mmsDto(MMSController.valueOf(mmsService.modifyMMS(MMSMrn,mrn,MMSController.valueOf(url))))
+                        .build());
+        }else{
+            throw new AuthenticationException();
+        }
     }
 
     @DeleteMapping(value = "/{mrn}")
-    public ResponseEntity<?> removeMMS(@PathVariable String mrn){
+    public ResponseEntity<?> removeMMS(@PathVariable("mrn") String mrn,
+                                       @RequestHeader(value = "MMS-MRN")String MMSMrn,
+                                       @RequestBody MMSDeleteReqDto mmsDeleteReqDto){
         log.debug("delete mrn :" + mrn);
 
-        mmsService.removeMMS(mrn);
-       return ResponseEntity.ok("OK");
+        if(clientVerifier.verifyClient(MMSMrn,mmsDeleteReqDto.getCertificate())){
+            mmsService.removeMMS(MMSMrn,mrn);
+            return ResponseEntity.ok("OK");
+        }else{
+            throw new AuthenticationException();
+        }
     }
 
 
-    private static MMS valueOf(MMSCreateReqDto mmsCreateReqDto){
+    private static MMS valueOf(String MMSMrn, String url){
         return MMS.builder()
-                .mrn(mmsCreateReqDto.getMrn())
-                .url(mmsCreateReqDto.getUrl())
+                .mrn(MMSMrn)
+                .url(url)
                 .build();
     }
-
-    private static MMS valueOf(MMSModifyReqDto mmsModifyReqDto){
+    private static MMS valueOf(String url){
         return MMS.builder()
-                .url(mmsModifyReqDto.getUrl())
+                .url(url)
                 .build();
     }
 

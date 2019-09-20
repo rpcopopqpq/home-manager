@@ -2,12 +2,11 @@ package kr.co.nexsys.mcp.homemanager.authentication;
 
 
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import net.etri.pkilib.server.ServerPKILibrary;
 import net.etri.pkilib.tool.ByteConverter;
 import org.springframework.stereotype.Component;
 
-@NoArgsConstructor
+
 @Data
 @Component
 public class ClientVerifier {
@@ -26,6 +25,14 @@ public class ClientVerifier {
         } else {
             return false;
         }
+    }
+
+    public String getAutenticationUrl(String mrn, String hexSignedData){
+        /*pkilib 에 메소드 추가 될 때 그 메소드 작성*/
+        //String url = ServerPKILibrary.get ...
+
+        //return url;
+        return "testUrl";
     }
 
     private void authenticateUsingMIRAPI(String mrn, String hexSignedData) {

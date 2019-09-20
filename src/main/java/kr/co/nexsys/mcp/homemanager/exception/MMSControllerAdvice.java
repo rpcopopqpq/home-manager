@@ -24,6 +24,10 @@ public class MMSControllerAdvice {
                 errorCodeDto.setCode(ErrorCode.NO_MRN_DATA.getCode());
                 errorCodeDto.setMessage(ErrorCode.NO_MRN_DATA.getMessage());
                 break;
+            case "HM03003N":
+                errorCodeDto.setCode(ErrorCode.NO_REIGSTER_DATA.getCode());
+                errorCodeDto.setMessage(ErrorCode.NO_REIGSTER_DATA.getMessage());
+                break;
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorCodeDto);
     }
@@ -73,6 +77,15 @@ public class MMSControllerAdvice {
                 .body(ErrorCodeDto.builder()
                         .code(ErrorCode.ERROR_AUTH.getCode())
                         .message(ErrorCode.ERROR_AUTH.getMessage())
+                        .build());
+    }
+
+    @ExceptionHandler(PermissionException.class)
+    public ResponseEntity<ErrorCodeDto> handlePermissionException(PermissionException a){
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(ErrorCodeDto.builder()
+                        .code(ErrorCode.NO_PERMISSION.getCode())
+                        .message(ErrorCode.NO_PERMISSION.getMessage())
                         .build());
     }
 

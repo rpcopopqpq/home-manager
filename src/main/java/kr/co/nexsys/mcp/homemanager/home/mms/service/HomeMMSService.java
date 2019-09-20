@@ -2,6 +2,7 @@ package kr.co.nexsys.mcp.homemanager.home.mms.service;
 
 import kr.co.nexsys.mcp.homemanager.exception.AlreadyExistException;
 import kr.co.nexsys.mcp.homemanager.exception.NullResultException;
+import kr.co.nexsys.mcp.homemanager.exception.PermissionException;
 import kr.co.nexsys.mcp.homemanager.exception.SystemException;
 import kr.co.nexsys.mcp.homemanager.home.mms.dao.HomeMMSDao;
 import kr.co.nexsys.mcp.homemanager.home.mms.dao.dvo.HomeMMSDvo;
@@ -47,7 +48,7 @@ public class HomeMMSService {
                throw new AlreadyExistException();
            }else{
                if(mmsDao.findOneMMSByMrn(homeMMS.getHomeMmsMrn()) ==null){
-                   throw new NullResultException("HM03002N");
+                   throw new NullResultException("HM03003N");
                }else{
                    return HomeMMSService.valueOf(homeMMSDao.saveAndFlush(HomeMMSService.valueOf(homeMMS)));
                }
@@ -55,7 +56,7 @@ public class HomeMMSService {
        }catch(AlreadyExistException a){
            throw new AlreadyExistException();
        }catch(NullPointerException n){
-           throw new NullResultException("HM03002N");
+           throw new NullResultException("HM03003N");
        }catch(Exception e){
            throw new SystemException();
        }
@@ -81,10 +82,14 @@ public class HomeMMSService {
     }
 
     //homeMMS 삭제
-    public void deleteHomeMMS(String mrn){
+    public void deleteHomeMMS(String mrn, String MmsMrn){
         try{
-            HomeMMS homeMMS = HomeMMSService.valueOf(homeMMSDao.findOneHomeMMSByMrn(mrn));
-            homeMMSDao.delete(HomeMMSService.valueOf(homeMMS));
+            if(MmsMrn.equals(mrn)){
+                HomeMMS homeMMS = HomeMMSService.valueOf(homeMMSDao.findOneHomeMMSByMrn(mrn));
+                homeMMSDao.delete(HomeMMSService.valueOf(homeMMS));
+            }else{
+                throw new PermissionException();
+            }
         }catch(NullPointerException n){
             throw new NullResultException("HM03002N");
         }catch(Exception e){
@@ -102,6 +107,7 @@ public class HomeMMSService {
         return HomeMMSDvo.builder()
                 .mrn(homeMMS.getMrn())
                 .mrn_mms(homeMMS.getHomeMmsMrn())
+                .type(homeMMS.getType())
                 .build();
     }
     private static HomeMMS valueOf(HomeMMSDvo homeMMSDvo){

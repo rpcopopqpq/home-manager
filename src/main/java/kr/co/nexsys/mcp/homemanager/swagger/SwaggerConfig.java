@@ -25,24 +25,16 @@ public class SwaggerConfig {
 
         /* 글로벌옵션을 통해 모든 파라미터에 Header값 추가 하기 */
         ParameterBuilder srcMRNBuilder = new ParameterBuilder();
-        srcMRNBuilder.name("srcMRN") //헤더 이름
-                .description("srcMRN") //설명
+        srcMRNBuilder.name("MMS-MRN") //헤더 이름
+                .description("MMS's MRN") //설명
                 .modelRef(new ModelRef("string"))
                 .parameterType("header")
-                .required(true)
+                .required(false)
                 .build();
 
-        ParameterBuilder hexSignedDataBuilder = new ParameterBuilder();
-        hexSignedDataBuilder.name("hexSignedData") //헤더 이름
-                .description("hexSignedData") //설명
-                .modelRef(new ModelRef("string"))
-                .parameterType("header")
-                .required(true)
-                .build();
 
         List<Parameter> aParameters = new ArrayList<>();
         aParameters.add(srcMRNBuilder.build());
-        aParameters.add(hexSignedDataBuilder.build());
 
         return new Docket(DocumentationType.SWAGGER_2)
                 .globalOperationParameters(aParameters)

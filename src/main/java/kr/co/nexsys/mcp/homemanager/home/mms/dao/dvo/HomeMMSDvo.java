@@ -23,10 +23,9 @@ public class HomeMMSDvo {
     @Id
     private String mrn;
     private String mrn_mms;
-    @Column(name = "create_date",updatable = false)
-    @CreationTimestamp
+    private String type;
+    @CreationTimestamp @Column(name = "create_date",updatable = false)
     private LocalDateTime create_date;
-    @Column(name="update_date",insertable = false)
-    @UpdateTimestamp
+    @UpdateTimestamp @Column(name="update_date",insertable = false)
     private LocalDateTime update_date;
 }
