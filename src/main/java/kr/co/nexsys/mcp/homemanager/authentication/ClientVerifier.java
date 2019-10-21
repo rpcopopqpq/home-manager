@@ -1,10 +1,15 @@
 package kr.co.nexsys.mcp.homemanager.authentication;
 
 
+import kr.co.nexsys.mcp.homemanager.exception.BusinessException;
 import lombok.Data;
 import net.etri.pkilib.server.ServerPKILibrary;
 import net.etri.pkilib.tool.ByteConverter;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+
+import javax.servlet.RequestDispatcher;
 
 
 @Data
@@ -37,6 +42,7 @@ public class ClientVerifier {
 
     private void authenticateUsingMIRAPI(String mrn, String hexSignedData) {
 
+
         serverPKILib = ServerPKILibrary.getInstance();
 
         byteConverter = ByteConverter.getInstance();
@@ -44,6 +50,7 @@ public class ClientVerifier {
 
         isVerified = serverPKILib.verifySignedData(signedData);
         isMatching = serverPKILib.getSubjectMRN(signedData).equals(mrn);
+
     }
 
 }

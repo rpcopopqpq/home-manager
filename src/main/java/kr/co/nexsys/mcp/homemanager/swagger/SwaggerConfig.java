@@ -32,9 +32,18 @@ public class SwaggerConfig {
                 .required(false)
                 .build();
 
+        ParameterBuilder certificateBuilder = new ParameterBuilder();
+        certificateBuilder.name("certificate") //헤더 이름
+                .description("MMS certificate") //설명
+                .modelRef(new ModelRef("string"))
+                .parameterType("header")
+                .required(false)
+                .build();
+
 
         List<Parameter> aParameters = new ArrayList<>();
         aParameters.add(srcMRNBuilder.build());
+        aParameters.add(certificateBuilder.build());
 
         return new Docket(DocumentationType.SWAGGER_2)
                 .globalOperationParameters(aParameters)

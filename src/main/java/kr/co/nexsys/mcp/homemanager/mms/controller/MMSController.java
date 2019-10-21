@@ -1,12 +1,15 @@
 package kr.co.nexsys.mcp.homemanager.mms.controller;
 
 import kr.co.nexsys.mcp.homemanager.authentication.ClientVerifier;
-import kr.co.nexsys.mcp.homemanager.exception.AuthenticationException;
+import kr.co.nexsys.mcp.homemanager.exception.BusinessException;
+import kr.co.nexsys.mcp.homemanager.exception.ErrorCode;
+import kr.co.nexsys.mcp.homemanager.exception.ErrorCodeDto;
 import kr.co.nexsys.mcp.homemanager.mms.controller.dto.*;
 import kr.co.nexsys.mcp.homemanager.mms.service.MMSService;
 import kr.co.nexsys.mcp.homemanager.mms.service.vo.MMS;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -47,14 +50,11 @@ public class MMSController {
                                                      @RequestBody MMSCreateReqDto mmsCreateReqDto){
         log.debug("insert Data :" + mmsCreateReqDto.toString());
 
-        if(clientVerifier.verifyClient(MMSMrn,mmsCreateReqDto.getCertificate())){
-            String url = clientVerifier.getAutenticationUrl(MMSMrn,mmsCreateReqDto.getCertificate());
-            return ResponseEntity.ok(MMSCreateResDto.builder()
+        String url = clientVerifier.getAutenticationUrl(MMSMrn,mmsCreateReqDto.getCertificate());
+        return ResponseEntity.ok(MMSCreateResDto.builder()
                     .mmsDto(MMSController.valueOf(mmsService.createMMS(MMSController.valueOf(MMSMrn,url))))
                     .build());
-        }else{
-            throw new AuthenticationException();
-        }
+
     }
 
     @PutMapping(value = "/{mrn}")
@@ -63,15 +63,11 @@ public class MMSController {
                                                      @RequestBody MMSModifyReqDto mmsModifyReqDto){
         log.debug("update Data :" + mmsModifyReqDto +", mrn :" + mrn);
 
-
-        if(clientVerifier.verifyClient(MMSMrn,mmsModifyReqDto.getCertificate())){ //2
-            String url = clientVerifier.getAutenticationUrl(MMSMrn,mmsModifyReqDto.getCertificate());
-            return ResponseEntity.ok(MMSModifyResDto.builder()
+        String url = clientVerifier.getAutenticationUrl(MMSMrn,mmsModifyReqDto.getCertificate());
+        return ResponseEntity.ok(MMSModifyResDto.builder()
                         .mmsDto(MMSController.valueOf(mmsService.modifyMMS(MMSMrn,mrn,MMSController.valueOf(url))))
                         .build());
-        }else{
-            throw new AuthenticationException();
-        }
+
     }
 
     @DeleteMapping(value = "/{mrn}")
@@ -80,12 +76,9 @@ public class MMSController {
                                        @RequestBody MMSDeleteReqDto mmsDeleteReqDto){
         log.debug("delete mrn :" + mrn);
 
-        if(clientVerifier.verifyClient(MMSMrn,mmsDeleteReqDto.getCertificate())){
-            mmsService.removeMMS(MMSMrn,mrn);
-            return ResponseEntity.ok("OK");
-        }else{
-            throw new AuthenticationException();
-        }
+        mmsService.removeMMS(MMSMrn,mrn);
+        return ResponseEntity.ok("OK");
+
     }
 
 

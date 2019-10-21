@@ -2,10 +2,7 @@ package kr.co.nexsys.mcp.homemanager.mms.service;
 
 
 
-import kr.co.nexsys.mcp.homemanager.exception.AlreadyExistException;
-import kr.co.nexsys.mcp.homemanager.exception.NullResultException;
-import kr.co.nexsys.mcp.homemanager.exception.PermissionException;
-import kr.co.nexsys.mcp.homemanager.exception.SystemException;
+import kr.co.nexsys.mcp.homemanager.exception.BusinessException;
 import kr.co.nexsys.mcp.homemanager.mms.dao.MMSDao;
 import kr.co.nexsys.mcp.homemanager.mms.dao.dvo.MMSDvo;
 import kr.co.nexsys.mcp.homemanager.mms.service.vo.MMS;
@@ -37,15 +34,15 @@ public class MMSService {
                                                .collect(Collectors.toList());
 
             if(result.isEmpty()){
-                throw new NullResultException("HM03001N");
+                throw new BusinessException("HM03001N");
             }else{
                 return result;
             }
-        }catch(NullResultException n){
-            throw new NullResultException("HM03001N");
+        }catch(BusinessException n){
+            throw new BusinessException("HM03001N");
         }catch(Exception e){
             e.printStackTrace();
-            throw new SystemException();
+            throw new BusinessException("HM99001R");
         }
     }
 
@@ -55,9 +52,9 @@ public class MMSService {
         try {
             return MMSService.valueOf(mmsDao.findOneMMSByMrn(mrn));
         }catch(NullPointerException n) {
-            throw new NullResultException("HM03001N");
+            throw new BusinessException("HM03001N");
         }catch(Exception e){
-            throw new SystemException();
+            throw new BusinessException("HM99001R");
         }
     }
 
@@ -65,16 +62,16 @@ public class MMSService {
     public MMS createMMS(MMS mms) {
         try {
             if(mmsDao.findOneMMSByMrn(mms.getMrn()) !=null){
-                throw new AlreadyExistException();
+                throw new BusinessException("HM02003R");
             }else {
                 MMS result = MMSService.valueOf(mmsDao.saveAndFlush(MMSService.valueOf(mms)));
                 return MMS.builder().mrn(result.getMrn())
                         .url(result.getUrl()).build();
             }
-        }catch(AlreadyExistException a){
-            throw new AlreadyExistException();
+        }catch(BusinessException a){
+            throw new BusinessException("HM02003R");
         }catch(Exception e){
-            throw new SystemException();
+            throw new BusinessException("HM99001R");
         }
     }
 
@@ -88,14 +85,14 @@ public class MMSService {
                 result.setUrl(mms.getUrl());
                 return MMSService.valueOf(mmsDao.saveAndFlush(MMSService.valueOf(result)));
             } else {
-                throw new PermissionException();
+                throw new BusinessException("HM10002R");
             }
-        }catch(PermissionException p){
-            throw new PermissionException();
+        }catch(BusinessException e){
+            throw new BusinessException("HM10002R");
         }catch(NullPointerException n) {
-            throw new NullResultException("HM03002N");
+            throw new BusinessException("HM03002N");
         }catch(Exception e){
-            throw new SystemException();
+            throw new BusinessException("HM99001R");
         }
     }
 
@@ -107,14 +104,14 @@ public class MMSService {
                 MMS result = MMSService.valueOf(mmsDao.findOneMMSByMrn(mrn));
                 mmsDao.delete(MMSService.valueOf(result));
             } else {
-                throw new PermissionException();
+                throw new BusinessException("HM10002R");
             }
-        }catch(PermissionException p){
-            throw new PermissionException();
+        }catch(BusinessException b){
+            throw new BusinessException("HM10002R");
         }catch(NullPointerException n) {
-            throw new NullResultException("HM03002N");
+            throw new BusinessException("HM03002N");
         }catch(Exception e){
-            throw new SystemException();
+            throw new BusinessException("HM99001R");
         }
     }
 
