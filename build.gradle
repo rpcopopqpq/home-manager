@@ -21,6 +21,8 @@ dependencies {
     implementation 'io.springfox:springfox-swagger-ui:2.9.2'
     implementation 'com.googlecode.json-simple:json-simple:1.1.1'
 
+    compile files('External Jars/pkilib-1.4.jar')
+
     compileOnly 'org.projectlombok:lombok:1.18.8'
     annotationProcessor 'org.projectlombok:lombok:1.18.8'
 
@@ -28,7 +30,7 @@ dependencies {
     runtimeOnly 'mysql:mysql-connector-java'
 
     testImplementation group: 'org.hamcrest', name: 'hamcrest', version: '2.1'
-    testImplementation ('org.springframework.boot:spring-boot-starter-test'){
+    testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'org.hamcrest'
     }
 }
