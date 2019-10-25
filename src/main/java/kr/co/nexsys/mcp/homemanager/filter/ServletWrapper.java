@@ -2,21 +2,23 @@ package kr.co.nexsys.mcp.homemanager.filter;
 
 import kr.co.nexsys.mcp.homemanager.authentication.ClientVerifier;
 
-
-
 import javax.servlet.ReadListener;
 import javax.servlet.ServletException;
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.CharBuffer;
 
 
 public class ServletWrapper extends HttpServletRequestWrapper {
     private final String body;
 
-    private ClientVerifier clientVerifier = new ClientVerifier();
+    private final ClientVerifier clientVerifier = new ClientVerifier();
 
     public ServletWrapper(HttpServletRequest request) throws IOException, ServletException {
         super(request);
@@ -29,6 +31,8 @@ public class ServletWrapper extends HttpServletRequestWrapper {
                 bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
                 CharBuffer charBuffer = CharBuffer.allocate(128);
                 int bytesRead = -1;
+
+
                 while ((bytesRead = bufferedReader.read(charBuffer)) > 0) {
                     stringBuilder.append(charBuffer, 0, bytesRead);
                 }
@@ -51,7 +55,7 @@ public class ServletWrapper extends HttpServletRequestWrapper {
 
     @Override
     public ServletInputStream getInputStream() throws IOException {
-        final ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(body.getBytes());
+        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(body.getBytes());
         ServletInputStream servletInputStream = new ServletInputStream() {
             @Override
             public boolean isFinished() {
@@ -76,7 +80,7 @@ public class ServletWrapper extends HttpServletRequestWrapper {
         return servletInputStream;
     }
 
-    public BufferedReader getReader() throws IOException{
+    public BufferedReader getReader() throws IOException {
         return new BufferedReader(new InputStreamReader(this.getInputStream()));
     }
 
@@ -85,13 +89,13 @@ public class ServletWrapper extends HttpServletRequestWrapper {
         return this.body;
     }
 
-    public boolean authenticationMMS(HttpServletRequest request){
-        if(request.getMethod().equals("POST") || request.getMethod().equals("PUT") || request.getMethod().equals("DELETE")){
-            if(clientVerifier.verifyClient(request.getHeader("MRN-MMS"),request.getHeader("certificate"))){
+    public boolean authenticationMMS(HttpServletRequest request) {
+        if (request.getMethod().equals("POST") || request.getMethod().equals("PUT") || request.getMethod().equals("DELETE")) {
+            if (clientVerifier.verifyClient(request.getHeader("MMS-MRN"), request.getHeader("certificate"))) {
                 return true;
             }
             return false;
-        }else{
+        } else {
             return true;
         }
     }
