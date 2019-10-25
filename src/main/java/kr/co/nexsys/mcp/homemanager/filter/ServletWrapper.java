@@ -53,6 +53,19 @@ public class ServletWrapper extends HttpServletRequestWrapper {
         body = stringBuilder.toString();
     }
 
+    public static boolean authenticationMMS(HttpServletRequest request) {
+    /*    if (request.getMethod().equals("POST") || request.getMethod().equals("PUT") || request.getMethod().equals("DELETE")) {
+            if (clientVerifier.verifyClient(request.getHeader("MMS-MRN"), request.getHeader("certificate"))) {
+                return true;
+            }
+            return false;
+        } else {
+            return true;
+        }*/
+
+        return true;
+    }
+
     @Override
     public ServletInputStream getInputStream() throws IOException {
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(body.getBytes());
@@ -87,16 +100,5 @@ public class ServletWrapper extends HttpServletRequestWrapper {
     //Use this method to read the request body
     public String getBody() {
         return this.body;
-    }
-
-    public boolean authenticationMMS(HttpServletRequest request) {
-        if (request.getMethod().equals("POST") || request.getMethod().equals("PUT") || request.getMethod().equals("DELETE")) {
-            if (clientVerifier.verifyClient(request.getHeader("MMS-MRN"), request.getHeader("certificate"))) {
-                return true;
-            }
-            return false;
-        } else {
-            return true;
-        }
     }
 }
