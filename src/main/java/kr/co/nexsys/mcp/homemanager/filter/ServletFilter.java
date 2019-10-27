@@ -1,28 +1,20 @@
 package kr.co.nexsys.mcp.homemanager.filter;
 
 
-import kr.co.nexsys.mcp.homemanager.exception.BusinessException;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Component;
-
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import javax.servlet.annotation.WebFilter;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpServletResponseWrapper;
 import java.io.IOException;
 
-@Component
-@WebFilter(urlPatterns = {"/mms/**", "/entity/**"})
+/*@Component
+@WebFilter(urlPatterns = {"/mms/**", "/entity/**"})*/
 public class ServletFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-        ServletWrapper servletWrapper = new ServletWrapper((HttpServletRequest) request);
+/*        ServletWrapper servletWrapper = new ServletWrapper((HttpServletRequest) request);
         HttpServletResponseWrapper httpServletResponse = new HttpServletResponseWrapper((HttpServletResponse) response);
 
         System.out.println("MMS-MRN:{}" + ((HttpServletRequest) request).getHeader("MMS-MRN"));
@@ -37,7 +29,7 @@ public class ServletFilter implements Filter {
         } catch (BusinessException e) {
             response.setContentType("application/json");
             ((HttpServletResponse) response).sendError(HttpStatus.UNAUTHORIZED.value());
-        }
+        }*/
     }
 
 }
